@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "04d5136a2e3e1a7589c6313b58b439879c213afd077d2d6580213f4255dcef7d"
+            "sha256": "f5dd9d4650456c21f19688b883d7ba4ed05714739b3604ed0446d56df82f712c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,89 @@
         ]
     },
     "default": {
+        "certifi": {
+            "hashes": [
+                "sha256:5930595817496dd21bb8dc35dad090f1c2cd0adfaf21204bf6732ca5d8ee34d3",
+                "sha256:8fc0819f1f30ba15bdb34cceffb9ef04d99f420f68eb75d901e9560b8749fc41"
+            ],
+            "version": "==2020.6.20"
+        },
+        "chardet": {
+            "hashes": [
+                "sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae",
+                "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
+            ],
+            "version": "==3.0.4"
+        },
+        "docutils": {
+            "hashes": [
+                "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af",
+                "sha256:c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"
+            ],
+            "version": "==0.16"
+        },
+        "ffpyplayer": {
+            "hashes": [
+                "sha256:08c516f62cce0da010a45c32d1ce3c5816500d91b083a77c08e7eadddfe4f25a",
+                "sha256:17bdfd39573e649d3976006340634ed27c2312fa483d4166d68c85ed85f5ee96",
+                "sha256:206c45660a553263d51f8a6abe679ba2966cee4979fdfc25e7385812f3e990fa",
+                "sha256:4038e5adaac6bf0a902bcd6abdb27cbc4350b0405c238c31460825145bba840e",
+                "sha256:57ce03db15c5bda150340f1f5df59b3b2a7ab92c11fc50252d9b0ba35010bdc4",
+                "sha256:5c25ad57ef3ea54884bb00534757b966140ba516217ba518d52ccdff4c3398e6",
+                "sha256:72ea1b0f31ebdeaeaebbcc56e52e8fd16a6d4facdacadf8c9b30ca56b2b9abcb",
+                "sha256:73081d8646de3281d44b4c1a2d627b9a4e3e0237530e5d77f5dcc85b47286c4d",
+                "sha256:95a34f60efc48fe2d3f08277d01559f4b1c6e1b2bc8dad14f2ce34191193f6c5",
+                "sha256:9e5e3a11df8f07b171384137707fd26df81bedd1762ebd8f43f002d80d8e6176",
+                "sha256:a3ba52c29cd5278dc2268fb67300fee830f5ceee02940b92e7a3e6a4cb350131",
+                "sha256:d63ca5174722155d2bad273351262d0a894c2a67c9945ac93e974fb9fbf63392",
+                "sha256:db21a1bd0f384ae544d2f12f16521c0fea5c355e965c703aed23a58fd225c9cf",
+                "sha256:dcfce97f57793005b8b15799de96db205780d90856c6ae2c6aba3a89b2591c9a"
+            ],
+            "index": "pypi",
+            "version": "==4.3.1"
+        },
+        "idna": {
+            "hashes": [
+                "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6",
+                "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"
+            ],
+            "version": "==2.10"
+        },
+        "kivy": {
+            "hashes": [
+                "sha256:090d3ded9835a17477cd93fbdaf0a7c42ff2218981cf198ded5ad8795bc74391",
+                "sha256:11e85eaf6efbfa2362a3334ffdad179a1b0ca8d255cca79eaa6a2765560d4982",
+                "sha256:1a1ff32f8a95f1e175198cbab81fcd2596783b180d4eafe63e87d171aa7fdb5e",
+                "sha256:1d28b198a64c30db8d94a0488e85f3037af60d514ab0d7ad5ab45add3ab77090",
+                "sha256:4a5480cbf837d3780c77a4f61b32b56d22ae9f03845e7a89dd3eaef1ae5fd037",
+                "sha256:4d0e596f74271e901b551f77661dde238df4765484fce9f5d1c72e8022984e84",
+                "sha256:5c3d0f2749522d62e9cce09cd54b2d823bf1b6b644ff1f627be49de6f3e3cba0",
+                "sha256:815a5c0b3b72fcd81ca7b2aa0744087163ed03e4cf9ab4e7c9733cea99fc1571",
+                "sha256:8819a27a09871af451760cb69486ced52e830c8a0a37480f22ef5e692f12c05b",
+                "sha256:a687602d90c4629dd036f577ca39acb76ba581370f9d915f3cab99be818ba8ad",
+                "sha256:b7ef6aad43a86d8df3fb865db864e354f2155a748019f8517f69f65c1a29cb64",
+                "sha256:b85ccf165050cbf2ee8447671eebbc222b369b40f0e0038dd9547d49a5e37373",
+                "sha256:c36652caa7f6c327dee834cfc699d5962d346b7a53e54bd81abc17c314226d89",
+                "sha256:ece170514db3f49844a41e4c910ad9ce9bc46da6f47a49158e11266bdcc6e479",
+                "sha256:f3bea6e4a21991827885d04127fc6d09a0e974ecfa12da7bf5faae93562ea102",
+                "sha256:f835462dd9aa491272552ef079b948a088598e2e95d68bb1d885d2c3f3d4e2c3"
+            ],
+            "index": "pypi",
+            "version": "==1.11.1"
+        },
+        "kivy-examples": {
+            "hashes": [
+                "sha256:5d052a615f8a22345b74f8020601d011e7b84154aa5f910f3aeb86920e95caa4"
+            ],
+            "index": "pypi",
+            "version": "==1.11.1"
+        },
+        "kivy-garden": {
+            "hashes": [
+                "sha256:c256f42788421273a08fbb0a228f0fb0e80dd86b629fb8c0920507f645be6c72"
+            ],
+            "version": "==0.1.4"
+        },
         "pygame": {
             "hashes": [
                 "sha256:0480fe82cd41a43e3eea497fa2c059c72ac54cb5d003d5aa2ed06a04541c384e",
@@ -47,6 +130,27 @@
             ],
             "index": "pypi",
             "version": "==1.9.6"
+        },
+        "pygments": {
+            "hashes": [
+                "sha256:307543fe65c0947b126e83dd5a61bd8acbd84abec11f43caebaf5534cbc17998",
+                "sha256:926c3f319eda178d1bd90851e4317e6d8cdb5e292a3386aac9bd75eca29cf9c7"
+            ],
+            "version": "==2.7.1"
+        },
+        "requests": {
+            "hashes": [
+                "sha256:b3559a131db72c33ee969480840fff4bb6dd111de7dd27c8ee1f820f4f00231b",
+                "sha256:fe75cc94a9443b9246fc7049224f75604b113c36acb93f87b80ed42c44cbb898"
+            ],
+            "version": "==2.24.0"
+        },
+        "urllib3": {
+            "hashes": [
+                "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a",
+                "sha256:e7983572181f5e1522d9c98453462384ee92a0be7fac5f1413a1e35c56cc0461"
+            ],
+            "version": "==1.25.10"
         }
     },
     "develop": {}
