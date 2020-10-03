@@ -11,7 +11,8 @@ sound_folder = path.join(path.dirname(__file__), 'sounds')
 
 ###############################
 ## to be placed in "constant.py" later
-WIDTH = 480
+# WIDTH = 480
+WIDTH = 1000
 HEIGHT = 600
 FPS = 60
 POWERUP_TIME = 5000
@@ -374,6 +375,7 @@ meteor_list = [
     'meteorBrown_small2.png',
     'meteorBrown_tiny1.png'
 ]
+meteor_count = 20
 
 for image in meteor_list:
     meteor_images.append(pygame.image.load(
@@ -456,7 +458,7 @@ while running:
 
         ## spawn a group of mob
         mobs = pygame.sprite.Group()
-        for i in range(8):  # 8 mobs
+        for i in range(meteor_count):  # 8 mobs
             # mob_element = Mob()
             # all_sprites.add(mob_element)
             # mobs.add(mob_element)
@@ -548,7 +550,7 @@ while running:
     #3 Draw/render
     screen.fill(BLACK)
     ## draw the stargaze.png image
-    screen.blit(background, background_rect)
+    # screen.blit(background, background_rect)
 
     all_sprites.draw(screen)
     # 10px down from the screen
