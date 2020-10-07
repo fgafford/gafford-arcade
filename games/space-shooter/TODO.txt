@@ -1,8 +1,12 @@
 Things that need to be added:
 
 - make a lot more rocks
+- place a timer on in the middle of the top screen
 - have power ups fall from top (not inside of rocks)
 - make a $ or points power up
+- powerup changes
+    - make gun powerup #1 change the rate of fire
+    - make gun powerup #2 do spread fire maybe???
 - make powerups fall faster
 - make 2 player
 	- make shot blue
@@ -12,3 +16,13 @@ Things that need to be added:
 - split meteor on explosion (like astroids game)
 	- give them the same speed
 	- random downword direction
+
+
+
+===== What do we want from this game... =====
+- For difficulty:
+   - number of meteors to increase with time
+   ? speed of meteors to increase with time? 
+        - maybe the possible top speed could increase with time
+        - maybe we do a difficulty multiplier
+            - it will change as the game changes

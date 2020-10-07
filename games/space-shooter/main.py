@@ -28,6 +28,12 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 ###############################
 
+####### Game Varialbes ########
+# the steapness of the angle for metiors
+meteor_angle = 6
+
+###############################
+
 ###############################
 ## to placed in "__init__.py" later
 ## initialize pygame and create window
@@ -68,13 +74,6 @@ def main_menu():
             draw_text(screen, "Press [ENTER] To Begin", 30, WIDTH/2, HEIGHT/2)
             draw_text(screen, "or [Q] To Quit", 30, WIDTH/2, (HEIGHT/2)+40)
             pygame.display.update()
-
-    #pygame.mixer.music.stop()
-    ready = pygame.mixer.Sound(path.join(sound_folder, 'getready.ogg'))
-    ready.play()
-    screen.fill(BLACK)
-    draw_text(screen, "GET READY!", 40, WIDTH/2, HEIGHT/2)
-    pygame.display.update()
 
 
 def draw_text(surf, text, size, x, y):
@@ -247,14 +246,17 @@ class Mob(pygame.sprite.Sprite):
         self.image_orig.set_colorkey(BLACK)
         self.image = self.image_orig.copy()
         self.rect = self.image.get_rect()
-        self.radius = int(self.rect.width * .90 / 2)
+        self.radius = int(self.rect.width * .98 / 2)
         self.rect.x = random.randrange(0, WIDTH - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
         # for randomizing the speed of the Mob
-        self.speedy = random.randrange(5, 20)
+        min_meteor_speed = 5
+        max_meteor_speed = 5
+        self.speedy = 5
+        # self.speedy = random.randrange(min_meteor_speed, max_meteor_speed)
 
         ## randomize the movements a little more
-        self.speedx = random.randrange(-3, 3)
+        self.speedx = random.randrange((meteor_angle * -1), meteor_angle)
 
         ## adding rotation to the mob element
         self.rotation = 0
@@ -439,10 +441,9 @@ menu_display = True
 while running:
     if menu_display:
         main_menu()
-        pygame.time.wait(3000)
-
         #Stop menu music
         pygame.mixer.music.stop()
+
         #Play the gameplay music
         pygame.mixer.music.load(
             path.join(sound_folder, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
@@ -454,14 +455,12 @@ while running:
         ## group all the sprites together for ease of update
         all_sprites = pygame.sprite.Group()
         player = Player()
+        player2 = 'abc'
         all_sprites.add(player)
 
         ## spawn a group of mob
         mobs = pygame.sprite.Group()
-        for i in range(meteor_count):  # 8 mobs
-            # mob_element = Mob()
-            # all_sprites.add(mob_element)
-            # mobs.add(mob_element)
+        for i in range(meteor_count): 
             newmob()
 
         ## group for bullets
