@@ -94,22 +94,21 @@ def main_menu():
 
 
 
-def draw_text(surf, text, size, x, y):
+def draw_text(surf, text, size, x, y, align = 'midtop'):
     ## selecting a cross platform font to display the score
     font = pygame.font.Font(font_name, size)
     # True denotes the font to be anti-aliased
     text_surface = font.render(text, True, WHITE)
     text_rect = text_surface.get_rect()
-    text_rect.midtop = (x, y)
+    # print(text_rect.midtop)
+    setattr(text_rect, align, (x, y))
     surf.blit(text_surface, text_rect)
 
-def draw_player_stats(player, x, y):
-    # draw player name
+def draw_player_stats(player, x, y, score_alignment = 'midtop'):
     # draw_text(screen, player.name, 18, x + 5, y + 5)
     draw_shield_bar(screen, x, y + 10, player.shield)
     draw_lives(screen, x, y + 30, player.lives, player.mini_img)
-    # 10px down from the screen
-    # draw_text(screen, str(score), 18, width / 2, 10)
+    draw_text(screen, str(player.score), 18, x, y + 60, score_alignment)
 
 def get_game_start_time(percision = 0):
     raw = round(time.time() - game_start_time, percision)
@@ -208,6 +207,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.name = name
+        self.score = 0
         player_img = pygame.image.load(path.join(img_dir, f'player_{color}.png')).convert()
         self.laser_img = pygame.image.load(path.join(img_dir, f'player_{color}_laser.png')).convert()
         self.mini_img = pygame.image.load(path.join(img_dir, f'player_{color}_extra_life.png')).convert()
@@ -550,9 +550,6 @@ while running:
         bullets = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
-        #### Score board variable
-        score = 0
-
     #1 Process input/events
     clock.tick(FPS)  # will make the loop run at the same speed all the time
     # gets all the events which have occured till now and keeps tab of them.
@@ -579,7 +576,7 @@ while running:
     ## now as we delete the mob element when we hit one with a bullet, we need to respawn them again
     ## as there will be no mob_elements left out
     for hit in hits:
-        score += 50 - hit.radius  # give different scores for hitting big and small metoers
+        player1.score += 50 - hit.radius  # give different scores for hitting big and small metoers
         random.choice(expl_sounds).play()
         # m = Mob()
         # all_sprites.add(m)
@@ -606,7 +603,7 @@ while running:
     all_sprites.draw(screen)
 
     # Display player stats over top everything else
-    draw_player_stats(player1, 5, 0)
+    draw_player_stats(player1, 5, 0, 'topleft')
 
     if(NUM_PLAYERS == 2):
         draw_player_stats(player2, WIDTH - 100, 0)

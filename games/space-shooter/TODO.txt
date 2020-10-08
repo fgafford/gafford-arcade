@@ -1,19 +1,18 @@
 Things that need to be added:
 
-- place a timer on in the middle of the top screen
++ place a timer on in the middle of the top screen
 - make 2 player
 	+ make shot blue
 	+ make pl2 ship red
+    + make a score for each player in the status bar
+    - give score based on bullet owner
+    - have both players get power-up on touch
     - make seperate controls for each ship....
-    - make a score for each player in the status bar
 - time based difficutly
     - make it so that number of meteors increase with time
     ? make it so that they move faster with time?
         - maybe their should just be fast waves or something
-- have power ups fall from top (not inside of rocks)
-- make a $ or points power up
 - powerup changes
-    - have both players get power-up on touch
     - make gun powerup #1 change the rate of fire
     - make gun powerup #2 do spread fire maybe???
     - make powerups fall faster
