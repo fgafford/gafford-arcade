@@ -1,21 +1,30 @@
 Things that need to be added:
 
-- make a lot more rocks
+- make 2 player
+	- make shot blue
+	- make pl2 ship red
+- time based difficutly
+    - make it so that number of meteors increase with time
+    ? make it so that they move faster with time?
+        - maybe their should just be fast waves or something
 - place a timer on in the middle of the top screen
 - have power ups fall from top (not inside of rocks)
 - make a $ or points power up
 - powerup changes
     - make gun powerup #1 change the rate of fire
     - make gun powerup #2 do spread fire maybe???
-- make powerups fall faster
-- make 2 player
-	- make shot blue
-	- make pl2 ship red
+    - make powerups fall faster
+- mob/meteor changes
+    - make larger meteors break into 2 (or 3) smaller ones when shot
+    ? make some grey meteors cannot be shot/destroyed?
 - make an extra life bonus at so many points
 - red hot exploding meteors
 - split meteor on explosion (like astroids game)
 	- give them the same speed
 	- random downword direction
+
+Bugs: 
+- player is able to shoot after explosion before new ship appears
 
 
 
