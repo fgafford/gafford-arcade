@@ -3,6 +3,8 @@
 from __future__ import division
 import pygame
 import random
+import time
+from datetime import timedelta
 from os import path
 
 ## assets folder
@@ -43,7 +45,7 @@ difficulty_max = 3
 # the max angle for metiors
 NUM_PLAYERS = 1
 meteor_angle = 6
-
+game_start_time = None
 
 ###############################
 ## to placed in "__init__.py" later
@@ -108,6 +110,10 @@ def draw_player_stats(player, x, y):
     draw_lives(screen, x, y + 30, player.lives, player.mini_img)
     # 10px down from the screen
     # draw_text(screen, str(score), 18, width / 2, 10)
+
+def get_game_start_time(percision = 0):
+    raw = round(time.time() - game_start_time, percision)
+    return str(timedelta(seconds=raw))
 
 ## check if the player collides with the mob
 # gives back a list, True makes the mob element disappear
@@ -506,6 +512,7 @@ while running:
         #Stop menu music
         pygame.mixer.music.stop()
 
+
         #### Game Init Code ####
         #Play the gameplay music
         pygame.mixer.music.load(
@@ -515,6 +522,10 @@ while running:
         pygame.mixer.music.play(-1)
 
         menu_display = False
+
+        game_start_time = time.time()
+        ########################
+
 
         ## group all the sprites together for ease of update
         all_sprites = pygame.sprite.Group()
@@ -599,6 +610,9 @@ while running:
 
     if(NUM_PLAYERS == 2):
         draw_player_stats(player2, WIDTH - 100, 0)
+
+    # draw game timer
+    draw_text(screen, get_game_start_time(), 18, WIDTH / 2, 10)
 
     ## Done after drawing everything to the screen
     pygame.display.flip()
