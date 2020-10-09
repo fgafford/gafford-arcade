@@ -272,13 +272,13 @@ class Player(pygame.sprite.Sprite):
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
             if self.power == 1:
-                bullet = Bullet(self.rect.centerx, self.rect.top, self.laser_img)
+                bullet = Bullet(self.rect.centerx, self.rect.top, self)
                 all_sprites.add(bullet)
                 bullets.add(bullet)
                 shooting_sound.play()
             if self.power == 2:
-                bullet1 = Bullet(self.rect.left, self.rect.centery, self.laser_img)
-                bullet2 = Bullet(self.rect.right, self.rect.centery, self.laser_img)
+                bullet1 = Bullet(self.rect.left, self.rect.centery, self)
+                bullet2 = Bullet(self.rect.right, self.rect.centery, self)
                 all_sprites.add(bullet1)
                 all_sprites.add(bullet2)
                 bullets.add(bullet1)
@@ -287,8 +287,8 @@ class Player(pygame.sprite.Sprite):
 
             """ MOAR POWAH """
             if self.power >= 3:
-                bullet1 = Bullet(self.rect.left, self.rect.centery, self.laser_img)
-                bullet2 = Bullet(self.rect.right, self.rect.centery, self.laser_img)
+                bullet1 = Bullet(self.rect.left, self.rect.centery, self)
+                bullet2 = Bullet(self.rect.right, self.rect.centery, self)
                 # Missile shoots from center of ship
                 # missile1 = Missile(self.rect.centerx, self.rect.top)
                 all_sprites.add(bullet1)
@@ -299,6 +299,9 @@ class Player(pygame.sprite.Sprite):
                 # bullets.add(missile1)
                 shooting_sound.play()
                 # missile_sound.play()
+
+    def add_to_score(self, points):
+        self.score += points
 
     def powerup(self):
         self.power += 1
@@ -383,9 +386,10 @@ class Pow(pygame.sprite.Sprite):
 
 ## defines the sprite for bullets
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, img):
+    def __init__(self, x, y, player):
         pygame.sprite.Sprite.__init__(self)
-        self.image = img
+        self.player = player
+        self.image = player.laser_img
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         ## place the bullet according to the current position of the player
@@ -398,17 +402,13 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         ## kill the sprite after it moves over the top border
         if self.rect.bottom < 0:
+            # TODO add score to player
             self.kill()
 
-        ## now we need a way to shoot
-        ## lets bind it to "spacebar".
-        ## adding an event for it in Game loop
-
-## FIRE ZE MISSILES
 
 
 class Missile(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, player):
         pygame.sprite.Sprite.__init__(self)
         self.image = missile_img
         self.image.set_colorkey(BLACK)
@@ -431,8 +431,7 @@ background = pygame.image.load(path.join(img_dir, 'starfield.png')).convert()
 background_rect = background.get_rect()
 ## ^^ draw this rect first
 
-# bullet_img = pygame.image.load(path.join(img_dir, 'player_blue_laser.png')).convert()
-# missile_img = pygame.image.load( path.join(img_dir, 'missile.png')).convert_alpha()
+missile_img = pygame.image.load( path.join(img_dir, 'missile.png')).convert_alpha()
 
 # meteor_img = pygame.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
 meteor_images = []
@@ -576,7 +575,10 @@ while running:
     ## now as we delete the mob element when we hit one with a bullet, we need to respawn them again
     ## as there will be no mob_elements left out
     for hit in hits:
-        player1.score += 50 - hit.radius  # give different scores for hitting big and small metoers
+        mob = hit
+        bullet = hits[hit][0]
+        bullet.player.add_to_score(50 - mob.radius)
+        # player1.score += 50 - hit.radius  # give different scores for hitting big and small metoers
         random.choice(expl_sounds).play()
         # m = Mob()
         # all_sprites.add(m)
@@ -606,7 +608,7 @@ while running:
     draw_player_stats(player1, 5, 0, 'topleft')
 
     if(NUM_PLAYERS == 2):
-        draw_player_stats(player2, WIDTH - 100, 0)
+        draw_player_stats(player2, WIDTH - 100, 0, 'topleft')
 
     # draw game timer
     draw_text(screen, get_game_start_time(), 18, WIDTH / 2, 10)

@@ -10,14 +10,17 @@ Things that need to be added:
     - make seperate controls for each ship....
 - time based difficutly
     - make it so that number of meteors increase with time
-    ? make it so that they move faster with time?
+    ? make it so that meteors move faster with time?
         - maybe their should just be fast waves or something
 - powerup changes
-    - make gun powerup #1 change the rate of fire
-    - make gun powerup #2 do spread fire maybe???
+    - 1: duel cannon (already working)
+    - 2: rapid fire (improve rate of fire: down to 250)
     - make powerups fall faster
     ? have some sort of points powerup fall???
         - maybe have it fall faster
+    - Missiles
+        - gained like a regular power-up
+        - always destroy and entire meteor
 - mob/meteor changes
     ? make some grey meteors cannot be shot/destroyed?
     ? red hot exploding meteors
@@ -25,6 +28,15 @@ Things that need to be added:
         ? 2 or 3 smaller pieces???
         - give them the same speed
         - random downword direction
+    - grey meteors!!!
+        - can only be destroyed by missiles 
+        - has gem(s) inside that fall out when destroyed
+        - gems follow same meteor tragectory
+- gems: 
+    - how to make sprite: 
+        https://onimille.tumblr.com/tutorials
+    - MUST get Jael in on the design here!
+    - maybe make then green, blue, or light blue
 - make an extra life bonus at so many points
 - summary screen
 
