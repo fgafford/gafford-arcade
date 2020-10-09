@@ -46,6 +46,8 @@ difficulty_max = 3
 NUM_PLAYERS = 1
 meteor_angle = 6
 game_start_time = None
+DEFAULT_SHOOT_RATE = 500
+FAST_SHOOT_RATE = 250
 
 ###############################
 ## to placed in "__init__.py" later
@@ -93,7 +95,6 @@ def main_menu():
             pygame.display.update()
 
 
-
 def draw_text(surf, text, size, x, y, align = 'midtop'):
     ## selecting a cross platform font to display the score
     font = pygame.font.Font(font_name, size)
@@ -109,6 +110,7 @@ def draw_player_stats(player, x, y, score_alignment = 'midtop'):
     draw_shield_bar(screen, x, y + 10, player.shield)
     draw_lives(screen, x, y + 30, player.lives, player.mini_img)
     draw_text(screen, str(player.score), 18, x, y + 60, score_alignment)
+    #TODO: draw missiles
 
 def get_game_start_time(percision = 0):
     raw = round(time.time() - game_start_time, percision)
@@ -141,7 +143,9 @@ def check_player_hit(player):
             if player.shield >= 100:
                 player.shield = 100
         if hit.type == 'gun':
-            player.powerup()
+            player.laser_upgrade()
+        if hit.type == 'missile':
+            player.add_missile()
 
     ## if player died and the explosion has finished, end game
     if player.lives == 0 and not death_explosion.alive():
@@ -208,6 +212,7 @@ class Player(pygame.sprite.Sprite):
 
         self.name = name
         self.score = 0
+        self.missiles = 3
         player_img = pygame.image.load(path.join(img_dir, f'player_{color}.png')).convert()
         self.laser_img = pygame.image.load(path.join(img_dir, f'player_{color}_laser.png')).convert()
         self.mini_img = pygame.image.load(path.join(img_dir, f'player_{color}_extra_life.png')).convert()
@@ -223,7 +228,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = HEIGHT - 10
         self.speedx = 0
         self.shield = 100
-        self.shoot_delay = 250
+        self.shoot_delay = DEFAULT_SHOOT_RATE
         self.last_shot = pygame.time.get_ticks()
         self.lives = 3
         self.hidden = False
@@ -235,6 +240,7 @@ class Player(pygame.sprite.Sprite):
         ## time out for powerups
         if self.power >= 2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
             self.power -= 1
+            self.shoot_delay = DEFAULT_SHOOT_RATE
             self.power_time = pygame.time.get_ticks()
 
         ## unhide
@@ -276,6 +282,7 @@ class Player(pygame.sprite.Sprite):
                 all_sprites.add(bullet)
                 bullets.add(bullet)
                 shooting_sound.play()
+
             if self.power == 2:
                 bullet1 = Bullet(self.rect.left, self.rect.centery, self)
                 bullet2 = Bullet(self.rect.right, self.rect.centery, self)
@@ -287,6 +294,7 @@ class Player(pygame.sprite.Sprite):
 
             """ MOAR POWAH """
             if self.power >= 3:
+                self.shoot_delay = FAST_SHOOT_RATE
                 bullet1 = Bullet(self.rect.left, self.rect.centery, self)
                 bullet2 = Bullet(self.rect.right, self.rect.centery, self)
                 # Missile shoots from center of ship
@@ -303,11 +311,15 @@ class Player(pygame.sprite.Sprite):
     def add_to_score(self, points):
         self.score += points
 
-    def powerup(self):
+    def laser_upgrade(self):
         self.power += 1
         self.power_time = pygame.time.get_ticks()
 
+    def add_missile(self):
+        self.missiles += 1
+
     def hide(self):
+        # TODO: make is so that we cannot shoot in this state
         self.hidden = True
         self.hide_timer = pygame.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT + 200)

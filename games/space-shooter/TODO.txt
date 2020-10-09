@@ -1,13 +1,6 @@
 Things that need to be added:
 
 + place a timer on in the middle of the top screen
-- make 2 player
-	+ make shot blue
-	+ make pl2 ship red
-    + make a score for each player in the status bar
-    - give score based on bullet owner
-    - have both players get power-up on touch
-    - make seperate controls for each ship....
 - time based difficutly
     - make it so that number of meteors increase with time
     ? make it so that meteors move faster with time?
@@ -37,6 +30,9 @@ Things that need to be added:
         https://onimille.tumblr.com/tutorials
     - MUST get Jael in on the design here!
     - maybe make then green, blue, or light blue
+- make 2 player
+    - have both players get power-up on touch
+    - make seperate controls for each ship....
 - make an extra life bonus at so many points
 - summary screen
 
