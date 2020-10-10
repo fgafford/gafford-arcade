@@ -6,13 +6,13 @@ Things that need to be added:
     ? make it so that meteors move faster with time?
         - maybe their should just be fast waves or something
 - powerup changes
-    - 1: duel cannon (already working)
-    - 2: rapid fire (improve rate of fire: down to 250)
-    - make powerups fall faster
-    ? have some sort of points powerup fall???
-        - maybe have it fall faster
+    + 1: single shot (slow)
+    + 2: duel cannon (slow)
+    + 3: rapid fire (fast)
     - Missiles
-        - gained like a regular power-up
+        + gained like a regular power-up
+        - make a falling missle sprite (no fire)
+        - change the missle sprite to a neutral color
         - always destroy and entire meteor
 - mob/meteor changes
     ? make some grey meteors cannot be shot/destroyed?

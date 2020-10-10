@@ -107,10 +107,10 @@ def draw_text(surf, text, size, x, y, align = 'midtop'):
 
 def draw_player_stats(player, x, y, score_alignment = 'midtop'):
     # draw_text(screen, player.name, 18, x + 5, y + 5)
-    draw_shield_bar(screen, x, y + 10, player.shield)
-    draw_lives(screen, x, y + 30, player.lives, player.mini_img)
-    draw_text(screen, str(player.score), 18, x, y + 60, score_alignment)
-    #TODO: draw missiles
+    draw_text(screen, str(player.score), 24, x, y + 10, score_alignment)
+    draw_shield_bar(screen, x, y + 40, player.shield)
+    draw_lives(screen, x, y + 60, player.lives - 1, player.mini_img)
+    draw_missiles(screen, x, y + 90, player.missiles)
 
 def get_game_start_time(percision = 0):
     raw = round(time.time() - game_start_time, percision)
@@ -167,12 +167,21 @@ def draw_shield_bar(surf, x, y, pct):
     pygame.draw.rect(surf, WHITE, outline_rect, 2)
 
 
-def draw_lives(surf, x, y, lives, img):
+def draw_lives(screen, x, y, lives, img):
     for i in range(lives):
         img_rect = img.get_rect()
         img_rect.x = x + 30 * i
         img_rect.y = y
-        surf.blit(img, img_rect)
+        screen.blit(img, img_rect)
+
+def draw_missiles(screen, x, y, count):
+    x_offset = 15
+    screen.blit(missile_powerup, (x,y))
+    screen.blit(ui_numbers["x"], (x + x_offset , y+5))
+    number = str(count)
+    for num in number:
+        x_offset += 20
+        screen.blit(ui_numbers[num], (x+ x_offset , y+5))
 
 
 def newmob():
@@ -212,7 +221,7 @@ class Player(pygame.sprite.Sprite):
 
         self.name = name
         self.score = 0
-        self.missiles = 3
+        self.missiles = 15
         player_img = pygame.image.load(path.join(img_dir, f'player_{color}.png')).convert()
         self.laser_img = pygame.image.load(path.join(img_dir, f'player_{color}_laser.png')).convert()
         self.mini_img = pygame.image.load(path.join(img_dir, f'player_{color}_extra_life.png')).convert()
@@ -321,6 +330,7 @@ class Player(pygame.sprite.Sprite):
     def hide(self):
         # TODO: make is so that we cannot shoot in this state
         self.hidden = True
+        self.missiles = 3
         self.hide_timer = pygame.time.get_ticks()
         self.rect.center = (WIDTH / 2, HEIGHT + 200)
 
@@ -380,7 +390,7 @@ class Mob(pygame.sprite.Sprite):
 class Pow(pygame.sprite.Sprite):
     def __init__(self, center):
         pygame.sprite.Sprite.__init__(self)
-        self.type = random.choice(['shield', 'gun'])
+        self.type = random.choice(['shield', 'gun', 'missile'])
         self.image = powerup_images[self.type]
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
@@ -444,6 +454,20 @@ background_rect = background.get_rect()
 ## ^^ draw this rect first
 
 missile_img = pygame.image.load( path.join(img_dir, 'missile.png')).convert_alpha()
+missile_powerup = pygame.image.load( path.join(img_dir, 'missile_powerup.png')).convert_alpha()
+ui_numbers = {
+        "x": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeralX.png')).convert_alpha(),  
+        "0": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral0.png')).convert_alpha(),  
+        "1": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral1.png')).convert_alpha(),  
+        "2": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral2.png')).convert_alpha(),  
+        "3": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral3.png')).convert_alpha(),  
+        "4": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral4.png')).convert_alpha(),  
+        "5": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral5.png')).convert_alpha(),  
+        "6": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral6.png')).convert_alpha(),  
+        "7": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral7.png')).convert_alpha(),  
+        "8": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral8.png')).convert_alpha(),  
+        "9": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral9.png')).convert_alpha(),  
+        }
 
 # meteor_img = pygame.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
 meteor_images = []
@@ -485,10 +509,9 @@ for i in range(9):
 
 ## load power ups
 powerup_images = {}
-powerup_images['shield'] = pygame.image.load(
-    path.join(img_dir, 'shield_gold.png')).convert()
-powerup_images['gun'] = pygame.image.load(
-    path.join(img_dir, 'bolt_gold.png')).convert()
+powerup_images['shield'] = pygame.image.load( path.join(img_dir, 'shield_gold.png')).convert()
+powerup_images['gun'] = pygame.image.load( path.join(img_dir, 'bolt_gold.png')).convert()
+powerup_images['missile'] = pygame.image.load( path.join(img_dir, 'missile.png')).convert()
 
 
 ###################################################
