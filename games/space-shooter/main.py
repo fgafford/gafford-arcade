@@ -6,6 +6,7 @@ import random
 import time
 from datetime import timedelta
 from os import path
+from PlayerControls import PlayerControls
 
 ## assets folder
 img_dir = path.join(path.dirname(__file__), 'assets')
@@ -44,6 +45,8 @@ difficulty_max = 3
 ####### Game Varialbes ########
 # the max angle for metiors
 NUM_PLAYERS = 1
+Player1 = PlayerControls(1) 
+Player2 = PlayerControls(2) 
 meteor_angle = 6
 game_start_time = None
 DEFAULT_SHOOT_RATE = 500
@@ -216,10 +219,10 @@ class Explosion(pygame.sprite.Sprite):
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, name, color):
+    def __init__(self, player_controls, color):
         pygame.sprite.Sprite.__init__(self)
 
-        self.name = name
+        self.player_controls = player_controls
         self.score = 0
         self.missiles = 15
         player_img = pygame.image.load(path.join(img_dir, f'player_{color}.png')).convert()
@@ -263,14 +266,15 @@ class Player(pygame.sprite.Sprite):
         ## pressed
 
         ## will give back a list of the keys which happen to be pressed down at that moment
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_LEFT]:
+        player_input = self.player_controls.get_player_input(pygame)
+        print(player_input)
+        if player_input["left"]:
             self.speedx = -5
-        elif keystate[pygame.K_RIGHT]:
+        elif player_input['right']:
             self.speedx = 5
 
         #Fire weapons by holding spacebar
-        if keystate[pygame.K_SPACE]:
+        if player_input['blue'] or player_input['red']:
             self.shoot()
 
         ## check for the borders at the left and right
@@ -566,12 +570,12 @@ while running:
 
         players = [] 
 
-        player1 = Player('Blue', 'blue')
+        player1 = Player(Player1, 'blue')
         all_sprites.add(player1)
         players.append(player1)
 
         if(NUM_PLAYERS == 2):
-            player2 = Player('Red', 'red')
+            player2 = Player(Player2, 'red')
             all_sprites.add(player2)
             players.append(player2)
 
@@ -587,7 +591,8 @@ while running:
     #1 Process input/events
     clock.tick(FPS)  # will make the loop run at the same speed all the time
     # gets all the events which have occured till now and keeps tab of them.
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         ## listening for the the X button at the top
         if event.type == pygame.QUIT:
             running = False
