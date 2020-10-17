@@ -4,8 +4,7 @@ import pygame
 Button Layout: 
 
 blue  | yellow
---------------
-green | red
+-------------- green | red
 """
 # Blue Player (left side, player 1)
 P1_Controls = {
@@ -27,10 +26,10 @@ P1_Controls = {
         "left": pygame.K_a,
         "right": pygame.K_d,
 
-        "blue": pygame.K_t,
-        "yellow": pygame.K_y,
-        "green": pygame.K_g,
-        "red": pygame.K_h,
+        "blue": pygame.K_r,
+        "yellow": pygame.K_t,
+        "green": pygame.K_f,
+        "red": pygame.K_g,
     }
 }
 
@@ -51,7 +50,7 @@ P2_Controls = {
     # Alternative keyboard keys (for testing)
     "keyboard": {
         "up": pygame.K_u,
-        "down": pygame.K_k,
+        "down": pygame.K_j,
         "left": pygame.K_h,
         "right": pygame.K_k,
 
@@ -75,6 +74,10 @@ buttons = [
     "red"
 ]
 
+########## Helper function #############
+def get_keyboard_input(game): 
+    return game.key.get_pressed()
+########################################
 
 """  
 Class representing the input controls for a player
@@ -98,35 +101,36 @@ class PlayerControls:
     """
     Is a single players key pressed
     """
-    def is_pressed(self, events, button):
+    def is_pressed(self, game, button):
         code = self.keyboard[button]
-        match = [ e for e in events if e.type == pygame.KEYDOWN and e.key == code ]
-        return len(match) > 0 
+        k_input = get_keyboard_input(game)
+        return k_input[code]
 
-    def has_input(self, events):
+    def has_input(self, game):
         # TODO: check for joystick input here as well
         codes = self.keyboard.values()
-        return [ e for e in events if e.type == pygame.KEYDOWN and e.key in codes ] 
+        k_input = get_keyboard_input(game)
+        presses = [ c for c in codes if k_input[c] ]
+        return len(presses) > 0 
     
-    #def get_pressed_key_codes(events):
-        #codes = self.keyboard.values()
-        #return [ e for e in events if e.type == pygame.KEYDOWN e in values ] 
+    #def get_pressed_key_codes(game):
 
     """
     Get a dict of all the keys pressed by a player
     """
-    def get_player_input(self, events):
-        return { key:self.is_code_pressed(events, code) for key,code in self.keyboard.items() }
+    def get_player_input(self, game):
+        k_input = get_keyboard_input(game)
+        return { key:k_input[code] for key,code in self.keyboard.items() }
 
     """
     is_code_pressed
     """
-    def is_code_pressed(self, events, code):
-        match = [ e for e in events if e.type == pygame.KEYDOWN and e.key == code ]
-        return len(match) > 0 
+    def is_code_pressed(self, game, code):
+        k_input = get_keyboard_input(game)
+        return k_input[code]
 
     """
     Get a binary representation of the buttons pressed
     """
-    def binary_buttons(self, events):
+    def binary_buttons(self, game):
         return 0

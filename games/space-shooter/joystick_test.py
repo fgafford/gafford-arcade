@@ -20,21 +20,20 @@ while running:
     clock.tick(30)  # will make the loop run at the same speed all the time
 
     #################### TEST HERE #################
-    events = pygame.event.get()
-
-    
-    if Player1.has_input(events):
+    if Player1.has_input(pygame):
         print("Player 1:")
-        print(Player1.get_player_input(events))
+        print(Player1.get_player_input(pygame))
+        print("--------------------")
 
-    if Player2.has_input(events):
+    if Player2.has_input(pygame):
         print("Player 2:")
-        print(Player2.get_player_input(events))
+        print(Player2.get_player_input(pygame))
+        print("--------------------")
 
     ################################################
 
     # Boilerplate for closing the game window
-    for event in events:
+    for event in pygame.event.get():
         ## listening for the the X button at the top
         if event.type == pygame.QUIT:
             running = False
