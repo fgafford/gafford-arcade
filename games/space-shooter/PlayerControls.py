@@ -14,10 +14,13 @@ P1_Controls = {
         "left": pygame.K_a,
         "right": pygame.K_d,
 
-        "blue": pygame.K_t,
-        "yellow": pygame.K_y,
-        "green": pygame.K_g,
-        "red": pygame.K_h,
+        "blue": 3,
+        "yellow": 1,
+        "green": 2,
+        "red": 0,
+
+        "1Player": 8,
+        "2Player": 7,
     },
     # Alternative keyboard keys (for testing)
     "keyboard": {
@@ -30,6 +33,9 @@ P1_Controls = {
         "yellow": pygame.K_t,
         "green": pygame.K_f,
         "red": pygame.K_g,
+
+        "1Player": 8,
+        "2Player": 7,
     }
 }
 
@@ -42,10 +48,13 @@ P2_Controls = {
         "left": pygame.K_a,
         "right": pygame.K_d,
 
-        "blue": pygame.K_t,
-        "yellow": pygame.K_y,
-        "green": pygame.K_g,
-        "red": pygame.K_h,
+        "blue": 0,
+        "yellow": 3,
+        "green": 1,
+        "red": 2,
+
+        "1Player": None,
+        "2Player": None,
     },
     # Alternative keyboard keys (for testing)
     "keyboard": {
@@ -58,6 +67,9 @@ P2_Controls = {
         "yellow": pygame.K_p,
         "green": pygame.K_l,
         "red": pygame.K_SEMICOLON,
+
+        "1Player": None,
+        "2Player": None,
     }
 }
 
@@ -84,43 +96,99 @@ Class representing the input controls for a player
 """
 class PlayerControls:
     def __init__(self, player = 1):
+        pygame.joystick.init()
         self.player = player
 
         if player == 1:
-            # print("player 1 controls")
-            self.joystick = P1_Controls["joystick"]
-            self.keyboard = P1_Controls["keyboard"]
+            # Player 1 actually has the 2nd joystick for input
+            self.joystick = pygame.joystick.Joystick(1)
+            self.joystick_controls = P1_Controls["joystick"]
+            self.keyboard_controls = P1_Controls["keyboard"]
         elif player == 2: 
-            # print("player 2 controls")
-            self.joystick = P2_Controls["joystick"]
-            self.keyboard = P2_Controls["keyboard"]
+            # Player 1 actually has the 2nd joystick for input
+            self.joystick = pygame.joystick.Joystick(0)
+            self.joystick_controls = P2_Controls["joystick"]
+            self.keyboard_controls = P2_Controls["keyboard"]
         else: 
             raise Exception(f'Invalid player number {player} must be either: 1 or 2')
 
+        self.joystick.init()
     
     """
     Is a single players key pressed
     """
-    def is_pressed(self, game, button):
-        code = self.keyboard[button]
+    def is_joystick_pressed(self, button):
+        print(self.joystick.get_button(button))
+        return self.joystick.get_button(button)
+
+    def is_keyboard_pressed(self, game, button):
+        code = self.keyboard_controls[button]
         k_input = get_keyboard_input(game)
         return k_input[code]
 
+    def is_pressed(self, game, button):
+        return self.is_joystick_pressed(button) or \
+                self.is_keyboard_pressed(game, button)
+
     def has_input(self, game):
-        # TODO: check for joystick input here as well
-        codes = self.keyboard.values()
+        return self.has_joystick_input(game) or self.has_keyboard_input(game)
+
+    def has_joystick_input(self, game):
+        presses = [ i  for i in range(self.joystick.get_numbuttons()) if self.joystick.get_button(i) == True ]
+        return len(presses) > 0
+
+    def has_keyboard_input(self, game):
+        codes = self.keyboard_controls.values()
         k_input = get_keyboard_input(game)
         presses = [ c for c in codes if k_input[c] ]
         return len(presses) > 0 
-    
-    #def get_pressed_key_codes(game):
 
     """
-    Get a dict of all the keys pressed by a player
+    Get a dict of all the joystick keys pressed by a player
     """
-    def get_player_input(self, game):
+    def get_pressed_joystick_keys(self):
+        # udlf = up,down,left,right
+        udlf = self.get_joystick_udlf()
+        buttons = self.get_pressed_color_joystick_buttons()
+        # TODO: get these legit
+        player_buttons = self.get_pressed_player_joystick_buttons()
+        j_input = udlf + buttons + player_buttons
+        return { button:j_input[i] for i,button in enumerate(self.joystick_controls) }
+    
+    def get_pressed_color_joystick_buttons(self):
+        buttons = [ self.joystick.get_button(b) for b in range(self.joystick.get_numbuttons()) ]
+        return [ buttons[self.joystick_controls['blue']], \
+                 buttons[self.joystick_controls['yellow']], \
+                 buttons[self.joystick_controls['green']], \
+                 buttons[self.joystick_controls['red']] ] 
+
+    def get_pressed_player_joystick_buttons(self):
+        buttons = [ self.joystick.get_button(b) for b in range(self.joystick.get_numbuttons()) ]
+        return [ buttons[self.joystick_controls['1Player']], \
+                 buttons[self.joystick_controls['2Player']] ] 
+
+    """
+    get_joystick_udlf
+
+    get the udlf (up,down,left,right) joystick positions 
+    """
+    def get_joystick_udlf(self):
+        return [0,0,0,0]
+
+    """
+    Get a dict of all the keyboard keys pressed by a player
+    """
+    def get_pressed_keyboard_keys(self, game):
         k_input = get_keyboard_input(game)
-        return { key:k_input[code] for key,code in self.keyboard.items() }
+        return { key:k_input[code] for key,code in self.keyboard_controls.items() }
+
+    """
+    Get all input for the player
+    """
+    def get_input(self, game):
+        # TODL: ned to check hoystick or keyboard andmerge dics here
+        return self.get_pressed_joystick_keys() or \
+               self.get_pressed_keyboard_keys(game)
 
     """
     is_code_pressed

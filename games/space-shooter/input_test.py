@@ -10,13 +10,11 @@ pygame.init()
 screen = pygame.display.set_mode((500, 500))
 
 Player1 = PlayerControls(1)
-# Player2 = PlayerControls(2)
+Player2 = PlayerControls(2)
 
 running = True
 menu_display = True
 clock = pygame.time.Clock()
-
-
 while running:
 
     clock.tick(30)  # will make the loop run at the same speed all the time
@@ -24,13 +22,13 @@ while running:
     #################### TEST HERE #################
     if Player1.has_input(pygame):
         print("Player 1:")
-        print(Player1.get_input(pygame))
+        print(Player1.get_player_input(pygame))
         print("--------------------")
 
-#    if Player2.has_input(pygame):
-#        print("Player 2:")
-#        print(Player2.get_input(pygame))
-#        print("--------------------")
+    if Player2.has_input(pygame):
+        print("Player 2:")
+        print(Player2.get_player_input(pygame))
+        print("--------------------")
 
     ################################################
 
