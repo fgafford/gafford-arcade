@@ -128,8 +128,17 @@ class PlayerControls:
         return self.has_joystick_input(game) or self.has_keyboard_input(game)
 
     def has_joystick_input(self, game):
-        presses = [ i  for i in range(self.joystick.get_numbuttons()) if self.joystick.get_button(i) == True ]
-        return len(presses) > 0
+        buttons = [ i  for i in range(self.joystick.get_numbuttons()) if self.joystick.get_button(i) == True ]
+        if len(buttons) > 0:
+            return true
+        else:
+            axes = self.get_joystick_udlf()
+            for i in axes:
+                if i == True:
+                   return True
+            return False
+
+        buttons = [ i  for i in range(self.joystick.get_numbuttons()) if self.joystick.get_button(i) == True ]
 
     def has_keyboard_input(self, game):
         codes = self.keyboard_controls.values()
@@ -154,9 +163,7 @@ class PlayerControls:
     """
     def get_pressed_joystick_as_array(self):
         udlf = self.get_joystick_udlf()
-        print(udlf)
         buttons = self.get_pressed_color_joystick_buttons()
-        # TODO: get these legit
         player_buttons = self.get_pressed_player_joystick_buttons()
         return udlf + buttons + player_buttons
 
@@ -195,7 +202,6 @@ class PlayerControls:
     """
     def get_joystick_axis_pressed(self, axis, dir):
         value = self.joystick.get_axis(int(axis))
-        print(axis, dir, value)
         if dir == "-":
             return value < 0
         elif dir == "+":
