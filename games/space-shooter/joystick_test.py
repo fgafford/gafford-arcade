@@ -10,7 +10,7 @@ pygame.init()
 screen = pygame.display.set_mode((500, 500))
 
 Player1 = PlayerControls(1)
-# Player2 = PlayerControls(2)
+Player2 = PlayerControls(2)
 
 running = True
 menu_display = True
@@ -27,10 +27,10 @@ while running:
         print(Player1.get_input(pygame))
         print("--------------------")
 
-#    if Player2.has_input(pygame):
-#        print("Player 2:")
-#        print(Player2.get_input(pygame))
-#        print("--------------------")
+    if Player2.has_input(pygame):
+        print("Player 2:")
+        print(Player2.get_input(pygame))
+        print("--------------------")
 
     ################################################
 

@@ -130,7 +130,7 @@ class PlayerControls:
     def has_joystick_input(self, game):
         buttons = [ i  for i in range(self.joystick.get_numbuttons()) if self.joystick.get_button(i) == True ]
         if len(buttons) > 0:
-            return true
+            return True
         else:
             axes = self.get_joystick_udlf()
             for i in axes:
@@ -182,6 +182,8 @@ class PlayerControls:
                  buttons[self.joystick_controls['red']] ] 
 
     def get_pressed_player_joystick_buttons(self):
+        if '1Player' not in self.joystick_controls:
+            return [False, False]
         buttons = [ self.joystick.get_button(b) for b in range(self.joystick.get_numbuttons()) ]
         return [ buttons[self.joystick_controls['1Player']], \
                  buttons[self.joystick_controls['2Player']] ] 
