@@ -9,10 +9,10 @@ blue  | yellow
 # Blue Player (left side, player 1)
 P1_Controls = {
     "joystick": {
-        "up": pygame.K_w,
-        "down": pygame.K_s,
-        "left": pygame.K_a,
-        "right": pygame.K_d,
+        "up": "1-",
+        "down": "1+",
+        "left": "0-",
+        "right": "0+",
 
         "blue": 3,
         "yellow": 1,
@@ -34,27 +34,24 @@ P1_Controls = {
         "green": pygame.K_f,
         "red": pygame.K_g,
 
-        "1Player": 8,
-        "2Player": 7,
-    }
+        "1Player": pygame.K_1,
+        "2Player": pygame.K_2,
+     }
 }
 
 
 # Red Player (right side, player 2)
 P2_Controls = {
     "joystick": {
-        "up": pygame.K_w,
-        "down": pygame.K_s,
-        "left": pygame.K_a,
-        "right": pygame.K_d,
+        "up": "1-",
+        "down": "1+",
+        "left": "0-",
+        "right": "0+",
 
         "blue": 0,
         "yellow": 3,
         "green": 1,
-        "red": 2,
-
-        "1Player": None,
-        "2Player": None,
+        "red": 2
     },
     # Alternative keyboard keys (for testing)
     "keyboard": {
@@ -66,10 +63,7 @@ P2_Controls = {
         "blue": pygame.K_o,
         "yellow": pygame.K_p,
         "green": pygame.K_l,
-        "red": pygame.K_SEMICOLON,
-
-        "1Player": None,
-        "2Player": None,
+        "red": pygame.K_SEMICOLON
     }
 }
 
@@ -144,15 +138,33 @@ class PlayerControls:
         return len(presses) > 0 
 
     """
-    Get a dict of all the joystick keys pressed by a player
+    get an array version of the pressed keys (1s and 0s)
+    following format:
+    index : key 
+    0 : up
+    1 : down
+    2 : left
+    3 : right
+    4 : blue
+    5 : yellow
+    6 : green 
+    7 : read
+    8 : 1Player (only for 1st player)
+    9 : 2Player (only for 1st player)
     """
-    def get_pressed_joystick_keys(self):
-        # udlf = up,down,left,right
+    def get_pressed_joystick_as_array(self):
         udlf = self.get_joystick_udlf()
+        print(udlf)
         buttons = self.get_pressed_color_joystick_buttons()
         # TODO: get these legit
         player_buttons = self.get_pressed_player_joystick_buttons()
-        j_input = udlf + buttons + player_buttons
+        return udlf + buttons + player_buttons
+
+    """
+    Get a dict of all the joystick keys pressed by a player
+    """
+    def get_pressed_joystick_keys(self):
+        j_input = self.get_pressed_joystick_as_array()
         return { button:j_input[i] for i,button in enumerate(self.joystick_controls) }
     
     def get_pressed_color_joystick_buttons(self):
@@ -173,7 +185,25 @@ class PlayerControls:
     get the udlf (up,down,left,right) joystick positions 
     """
     def get_joystick_udlf(self):
-        return [0,0,0,0]
+        # get the config (0-)
+        config = list(self.joystick_controls.values())[0:4]
+        return [ self.get_joystick_axis_pressed(c[0], c[1]) for c in config ]  
+
+    """
+    Given an axix (eg. 0,1,2) and a direction (above or below 0) (eg. "-" or "+")
+    determin if the axis is enguaged
+    """
+    def get_joystick_axis_pressed(self, axis, dir):
+        value = self.joystick.get_axis(int(axis))
+        print(axis, dir, value)
+        if dir == "-":
+            return value < 0
+        elif dir == "+":
+            return value > 0
+        else:
+            # Bad input here.... so its a False
+            return False
+
 
     """
     Get a dict of all the keyboard keys pressed by a player
