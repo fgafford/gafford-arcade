@@ -79,23 +79,19 @@ def main_menu():
     pygame.display.update()
 
     while True:
-        ev = pygame.event.poll()
-        if ev.type == pygame.KEYDOWN:
-            if ev.key == pygame.K_RETURN:
-                break
-            elif ev.key == pygame.K_1:
-                NUM_PLAYERS = 1
-                break
-            elif ev.key == pygame.K_2:
-                NUM_PLAYERS = 2
-                break
-        elif ev.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+        player_input = Player1.get_input(pygame)
+        print(player_input)
+        if player_input["1Player"]:
+            NUM_PLAYERS = 1
+            break
+        if player_input["2Player"]:
+            NUM_PLAYERS = 1
         else:
             draw_text(screen, "Press [ENTER] To Begin", 30, WIDTH/2, HEIGHT/2)
             draw_text(screen, "or [Q] To Quit", 30, WIDTH/2, (HEIGHT/2)+40)
             pygame.display.update()
+        clock.tick(FPS)  # will make the loop run at the same speed all the time
+        pygame.display.update()
 
 
 def draw_text(surf, text, size, x, y, align = 'midtop'):
@@ -266,8 +262,7 @@ class Player(pygame.sprite.Sprite):
         ## pressed
 
         ## will give back a list of the keys which happen to be pressed down at that moment
-        player_input = self.player_controls.get_player_input(pygame)
-        print(player_input)
+        player_input = self.player_controls.get_input(pygame)
         if player_input["left"]:
             self.speedx = -5
         elif player_input['right']:
