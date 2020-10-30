@@ -57,6 +57,7 @@ FAST_SHOOT_RATE = 250
 ## initialize pygame and create window
 pygame.init()
 pygame.mixer.init()  # For sound
+pygame.mouse.set_visible(False)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Shooter")
 clock = pygame.time.Clock()  # For syncing the FPS
@@ -585,6 +586,7 @@ while running:
 
     #1 Process input/events
     clock.tick(FPS)  # will make the loop run at the same speed all the time
+
     # gets all the events which have occured till now and keeps tab of them.
     events = pygame.event.get()
     for event in events:
