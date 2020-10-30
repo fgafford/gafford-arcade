@@ -146,10 +146,10 @@ def check_player_hit(player):
             player.add_missile()
 
     ## if player died and the explosion has finished, end game
-    if player.lives == 0 and not death_explosion.alive():
-        running = False
-        # menu_display = True
-        # pygame.display.update()
+    if player.lives == 0:
+        global menu_display
+        # TODL: shoe end game summary....
+        menu_display = True
 
 def draw_shield_bar(surf, x, y, pct):
     # if pct < 0:
