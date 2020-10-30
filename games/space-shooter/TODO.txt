@@ -5,15 +5,22 @@ Things that need to be added:
     - make it so that number of meteors increase with time
     ? make it so that meteors move faster with time?
         - maybe their should just be fast waves or something
+
 - powerup changes
     + 1: single shot (slow)
     + 2: duel cannon (slow)
     + 3: rapid fire (fast)
+    - make a powerup obtained sound
     - Missiles
         + gained like a regular power-up
-        - make a falling missle sprite (no fire)
-        - change the missle sprite to a neutral color
-        - always destroy and entire meteor
+        + make a falling missle sprite (no fire)
+	- make a missle sprint with fire
+	BUG: bullets and missles are the same in the game currently
+		- cannot fire a missle at the same time as a lazer
+        - always destroy and entire meteor when missile strikes
+	- get a different missle sound
+	- make a cooler missile explosion sound
+
 - mob/meteor changes
     ? make some grey meteors cannot be shot/destroyed?
     ? red hot exploding meteors

@@ -219,7 +219,7 @@ class Player(pygame.sprite.Sprite):
 
         self.player_controls = player_controls
         self.score = 0
-        self.missiles = 15
+        self.missiles = 3
         player_img = pygame.image.load(path.join(img_dir, f'player_{color}.png')).convert()
         self.laser_img = pygame.image.load(path.join(img_dir, f'player_{color}_laser.png')).convert()
         self.mini_img = pygame.image.load(path.join(img_dir, f'player_{color}_extra_life.png')).convert()
@@ -269,6 +269,9 @@ class Player(pygame.sprite.Sprite):
         if player_input['blue'] or player_input['red']:
             self.shoot()
 
+        if player_input['yellow'] or player_input['green']:
+            self.fire_missile()
+
         ## check for the borders at the left and right
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
@@ -317,17 +320,26 @@ class Player(pygame.sprite.Sprite):
             if self.power >= 3:
                 self.shoot_delay = FAST_SHOOT_RATE
                 bullet1 = Bullet(self.rect.left, self.rect.centery, self)
-                bullet2 = Bullet(self.rect.right, self.rect.centery, self)
-                # Missile shoots from center of ship
-                # missile1 = Missile(self.rect.centerx, self.rect.top)
                 all_sprites.add(bullet1)
-                all_sprites.add(bullet2)
-                # all_sprites.add(missile1)
                 bullets.add(bullet1)
+
+                bullet2 = Bullet(self.rect.right, self.rect.centery, self)
+                all_sprites.add(bullet2)
                 bullets.add(bullet2)
-                # bullets.add(missile1)
+
                 shooting_sound.play()
-                # missile_sound.play()
+
+
+    def fire_missile(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > self.shoot_delay and self.missiles > 0:
+            self.last_shot = now
+            # Missile shoots from center of ship
+            missile1 = Missile(self.rect.centerx, self.rect.top, self)
+            bullets.add(missile1)
+            all_sprites.add(missile1)
+            missile_sound.play()
+            self.missiles -= 1
 
     def add_to_score(self, points):
         self.score += points
@@ -444,6 +456,7 @@ class Bullet(pygame.sprite.Sprite):
 class Missile(pygame.sprite.Sprite):
     def __init__(self, x, y, player):
         pygame.sprite.Sprite.__init__(self)
+        self.player = player
         self.image = missile_img
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
@@ -532,7 +545,7 @@ powerup_images['missile'] = pygame.image.load( path.join(img_dir, 'missile.png')
 ###################################################
 ### Load all game sounds
 shooting_sound = pygame.mixer.Sound(path.join(sound_folder, 'pew.wav'))
-# missile_sound = pygame.mixer.Sound(path.join(sound_folder, 'rocket.ogg'))
+missile_sound = pygame.mixer.Sound(path.join(sound_folder, 'rocket.ogg'))
 expl_sounds = []
 for sound in ['expl3.wav', 'expl6.wav']:
     expl_sounds.append(pygame.mixer.Sound(path.join(sound_folder, sound)))
