@@ -77,22 +77,22 @@ def main_menu():
     title = pygame.transform.scale(title, (WIDTH, HEIGHT), screen)
 
     screen.blit(title, (0, 0))
-    pygame.display.update()
 
     while True:
         player_input = Player1.get_input(pygame)
-        print(player_input)
+        events = pygame.event.get()
         if player_input["1Player"]:
             NUM_PLAYERS = 1
             break
         if player_input["2Player"]:
-            NUM_PLAYERS = 1
+            NUM_PLAYERS = 2
+            break
         else:
             draw_text(screen, "Press [ENTER] To Begin", 30, WIDTH/2, HEIGHT/2)
             draw_text(screen, "or [Q] To Quit", 30, WIDTH/2, (HEIGHT/2)+40)
             pygame.display.update()
-        clock.tick(FPS)  # will make the loop run at the same speed all the time
-        pygame.display.update()
+        # clock.tick(FPS)  # will make the loop run at the same speed all the time
+        # pygame.display.update()
 
 
 def draw_text(surf, text, size, x, y, align = 'midtop'):
