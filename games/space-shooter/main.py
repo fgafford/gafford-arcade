@@ -91,8 +91,6 @@ def main_menu():
             draw_text(screen, "Press [ENTER] To Begin", 30, WIDTH/2, HEIGHT/2)
             draw_text(screen, "or [Q] To Quit", 30, WIDTH/2, (HEIGHT/2)+40)
             pygame.display.update()
-        # clock.tick(FPS)  # will make the loop run at the same speed all the time
-        # pygame.display.update()
 
 
 def draw_text(surf, text, size, x, y, align = 'midtop'):
@@ -233,8 +231,7 @@ class Player(pygame.sprite.Sprite):
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.radius = 20
-        self.rect.centerx = WIDTH / 2
-        self.rect.bottom = HEIGHT - 10
+        self.set_start_position()
         self.speedx = 0
         self.shield = 100
         self.shoot_delay = DEFAULT_SHOOT_RATE
@@ -255,8 +252,7 @@ class Player(pygame.sprite.Sprite):
         ## unhide
         if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
-            self.rect.centerx = WIDTH / 2
-            self.rect.bottom = HEIGHT - 30
+            self.set_start_position()
 
         self.speedx = 0  # makes the player static in the screen by default.
         # then we have to check whether there is an event hanlding being done for the arrow keys being
@@ -280,6 +276,22 @@ class Player(pygame.sprite.Sprite):
             self.rect.left = 0
 
         self.rect.x += self.speedx
+
+    def set_start_position(self):
+        global NUM_PLAYER
+        if NUM_PLAYERS == 1:
+            self.rect.centerx = WIDTH / 2
+            self.rect.bottom = HEIGHT - 30
+        if NUM_PLAYERS == 2:
+            player_number = self.player_controls.get_player_number()
+            if player_number == 1:
+                # which player are we?
+                self.rect.centerx = WIDTH / 3
+                self.rect.bottom = HEIGHT - 30
+            if player_number == 2:
+                # which player are we?
+                self.rect.centerx = (WIDTH / 3 ) * 2
+                self.rect.bottom = HEIGHT - 30
 
     def shoot(self):
         ## to tell the bullet where to spawn

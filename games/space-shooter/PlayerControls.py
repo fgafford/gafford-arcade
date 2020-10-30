@@ -107,6 +107,9 @@ class PlayerControls:
             raise Exception(f'Invalid player number {player} must be either: 1 or 2')
 
         self.joystick.init()
+
+    def get_player_number(self):
+        return self.player
     
     """
     Is a single players key pressed
