@@ -297,35 +297,35 @@ class Player(pygame.sprite.Sprite):
                 self.rect.bottom = HEIGHT - 30
 
     def shoot(self):
-        ## to tell the bullet where to spawn
+        ## to tell the laser where to spawn
         now = pygame.time.get_ticks()
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
             if self.power == 1:
-                bullet = Bullet(self.rect.centerx, self.rect.top, self)
-                all_sprites.add(bullet)
-                bullets.add(bullet)
+                laser = Laser(self.rect.centerx, self.rect.top, self)
+                all_sprites.add(laser)
+                lasers.add(laser)
                 shooting_sound.play()
 
             if self.power == 2:
-                bullet1 = Bullet(self.rect.left, self.rect.centery, self)
-                bullet2 = Bullet(self.rect.right, self.rect.centery, self)
-                all_sprites.add(bullet1)
-                all_sprites.add(bullet2)
-                bullets.add(bullet1)
-                bullets.add(bullet2)
+                laser1 = Laser(self.rect.left, self.rect.centery, self)
+                laser2 = Laser(self.rect.right, self.rect.centery, self)
+                all_sprites.add(laser1)
+                all_sprites.add(laser2)
+                lasers.add(laser1)
+                lasers.add(laser2)
                 shooting_sound.play()
 
             """ MOAR POWAH """
             if self.power >= 3:
                 self.shoot_delay = FAST_SHOOT_RATE
-                bullet1 = Bullet(self.rect.left, self.rect.centery, self)
-                all_sprites.add(bullet1)
-                bullets.add(bullet1)
+                laser1 = Laser(self.rect.left, self.rect.centery, self)
+                all_sprites.add(laser1)
+                lasers.add(laser1)
 
-                bullet2 = Bullet(self.rect.right, self.rect.centery, self)
-                all_sprites.add(bullet2)
-                bullets.add(bullet2)
+                laser2 = Laser(self.rect.right, self.rect.centery, self)
+                all_sprites.add(laser2)
+                lasers.add(laser2)
 
                 shooting_sound.play()
 
@@ -336,7 +336,7 @@ class Player(pygame.sprite.Sprite):
             self.last_shot = now
             # Missile shoots from center of ship
             missile1 = Missile(self.rect.centerx, self.rect.top, self)
-            bullets.add(missile1)
+            lasers.add(missile1)
             all_sprites.add(missile1)
             missile_sound.play()
             self.missiles -= 1
@@ -418,7 +418,7 @@ class Pow(pygame.sprite.Sprite):
         self.image = powerup_images[self.type]
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
-        ## place the bullet according to the current position of the player
+        ## place the laser according to the current position of the player
         self.rect.center = center
         self.speedy = 2
 
@@ -430,15 +430,15 @@ class Pow(pygame.sprite.Sprite):
             self.kill()
 
 
-## defines the sprite for bullets
-class Bullet(pygame.sprite.Sprite):
+## defines the sprite for lasers
+class Laser(pygame.sprite.Sprite):
     def __init__(self, x, y, player):
         pygame.sprite.Sprite.__init__(self)
         self.player = player
         self.image = player.laser_img
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
-        ## place the bullet according to the current position of the player
+        ## place the laser according to the current position of the player
         self.rect.bottom = y
         self.rect.centerx = x
         self.speedy = -10
@@ -457,7 +457,7 @@ class Missile(pygame.sprite.Sprite):
     def __init__(self, x, y, player):
         pygame.sprite.Sprite.__init__(self)
         self.player = player
-        self.image = missile_img
+        self.image = missile_powerup
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.bottom = y
@@ -479,7 +479,8 @@ background_rect = background.get_rect()
 ## ^^ draw this rect first
 
 missile_img = pygame.image.load( path.join(img_dir, 'missile.png')).convert_alpha()
-missile_powerup = pygame.image.load( path.join(img_dir, 'missile_powerup.png')).convert_alpha()
+missile_powerup_raw = pygame.image.load( path.join(img_dir, 'missile_powerup.png')).convert_alpha()
+missile_powerup = pygame.transform.scale( missile_powerup_raw, (12,30))
 ui_numbers = {
         "x": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeralX.png')).convert_alpha(),  
         "0": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral0.png')).convert_alpha(),  
@@ -536,7 +537,7 @@ for i in range(9):
 powerup_images = {}
 powerup_images['shield'] = pygame.image.load( path.join(img_dir, 'shield_gold.png')).convert()
 powerup_images['gun'] = pygame.image.load( path.join(img_dir, 'bolt_gold.png')).convert()
-powerup_images['missile'] = pygame.image.load( path.join(img_dir, 'missile.png')).convert()
+powerup_images['missile'] = missile_powerup.convert()
 
 
 ###################################################
@@ -605,8 +606,8 @@ while running:
         for i in range(meteor_count): 
             newmob()
 
-        ## group for bullets
-        bullets = pygame.sprite.Group()
+        ## group for lasers
+        lasers = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
     #1 Process input/events
@@ -623,7 +624,7 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 running = False
-        # ## event for shooting the bullets
+        # ## event for shooting the lasers
         # elif event.type == pygame.KEYDOWN:
         #     if event.key == pygame.K_SPACE:
         #         player1.shoot()      ## we have to define the shoot()  function
@@ -631,15 +632,15 @@ while running:
     #2 Update
     all_sprites.update()
 
-    ## check if a bullet hit a mob
-    ## now we have a group of bullets and a group of mob
-    hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
-    ## now as we delete the mob element when we hit one with a bullet, we need to respawn them again
+    ## check if a laser hit a mob
+    ## now we have a group of lasers and a group of mob
+    hits = pygame.sprite.groupcollide(mobs, lasers, True, True)
+    ## now as we delete the mob element when we hit one with a laser, we need to respawn them again
     ## as there will be no mob_elements left out
     for hit in hits:
         mob = hit
-        bullet = hits[hit][0]
-        bullet.player.add_to_score(50 - mob.radius)
+        laser = hits[hit][0]
+        laser.player.add_to_score(50 - mob.radius)
         # player1.score += 50 - hit.radius  # give different scores for hitting big and small metoers
         random.choice(expl_sounds).play()
         # m = Mob()

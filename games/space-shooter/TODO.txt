@@ -1,6 +1,7 @@
 Things that need to be added:
 
 + place a timer on in the middle of the top screen
+
 - time based difficutly
     - make it so that number of meteors increase with time
     ? make it so that meteors move faster with time?
@@ -12,14 +13,11 @@ Things that need to be added:
     + 3: rapid fire (fast)
     - make a powerup obtained sound
     - Missiles
-        + gained like a regular power-up
-        + make a falling missle sprite (no fire)
-	- make a missle sprint with fire
-	BUG: bullets and missles are the same in the game currently
-		- cannot fire a missle at the same time as a lazer
+        - make a missle sprint with fire
         - always destroy and entire meteor when missile strikes
-	- get a different missle sound
-	- make a cooler missile explosion sound
+        - get a different missle sound
+        - make a cooler missile explosion sound
+        - BUG: cannot fire a missle at the same time as a lazer
 
 - mob/meteor changes
     ? make some grey meteors cannot be shot/destroyed?
@@ -37,9 +35,7 @@ Things that need to be added:
         https://onimille.tumblr.com/tutorials
     - MUST get Jael in on the design here!
     - maybe make then green, blue, or light blue
-- make 2 player
-    - have both players get power-up on touch
-    - make seperate controls for each ship....
+
 - make an extra life bonus at so many points
 - summary screen
 
