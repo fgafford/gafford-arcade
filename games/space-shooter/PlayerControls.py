@@ -93,20 +93,26 @@ class PlayerControls:
         pygame.joystick.init()
         self.player = player
 
+        self.joysticks_present = pygame.joystick.get_count() > 0
+
         if player == 1:
             # Player 1 actually has the 2nd joystick for input
-            self.joystick = pygame.joystick.Joystick(1)
-            self.joystick_controls = P1_Controls["joystick"]
             self.keyboard_controls = P1_Controls["keyboard"]
+            self.joystick_controls = P1_Controls["joystick"]
+            if self.joysticks_present:
+                self.joystick = pygame.joystick.Joystick(1)
+
         elif player == 2: 
             # Player 1 actually has the 2nd joystick for input
-            self.joystick = pygame.joystick.Joystick(0)
-            self.joystick_controls = P2_Controls["joystick"]
             self.keyboard_controls = P2_Controls["keyboard"]
+            self.joystick_controls = P2_Controls["joystick"]
+            if self.joysticks_present:
+                self.joystick = pygame.joystick.Joystick(0)
         else: 
             raise Exception(f'Invalid player number {player} must be either: 1 or 2')
 
-        self.joystick.init()
+        if self.joysticks_present:
+            self.joystick.init()
 
     def get_player_number(self):
         return self.player
@@ -115,7 +121,6 @@ class PlayerControls:
     Is a single players key pressed
     """
     def is_joystick_pressed(self, button):
-        print(self.joystick.get_button(button))
         return self.joystick.get_button(button)
 
     def is_keyboard_pressed(self, game, button):
@@ -174,10 +179,15 @@ class PlayerControls:
     Get a dict of all the joystick keys pressed by a player
     """
     def get_pressed_joystick_keys(self):
+        if not self.joysticks_present:
+            return { button:False for button in self.joystick_controls.keys() }
+
         j_input = self.get_pressed_joystick_as_array()
         return { button:j_input[i] for i,button in enumerate(self.joystick_controls) }
     
     def get_pressed_color_joystick_buttons(self):
+        if not self.joysticks_present:
+            return [False,False,False,False]
         buttons = [ self.joystick.get_button(b) for b in range(self.joystick.get_numbuttons()) ]
         return [ buttons[self.joystick_controls['blue']], \
                  buttons[self.joystick_controls['yellow']], \
@@ -185,6 +195,8 @@ class PlayerControls:
                  buttons[self.joystick_controls['red']] ] 
 
     def get_pressed_player_joystick_buttons(self):
+        if not self.joysticks_present:
+            return [False, False]
         if '1Player' not in self.joystick_controls:
             return [False, False]
         buttons = [ self.joystick.get_button(b) for b in range(self.joystick.get_numbuttons()) ]
@@ -198,6 +210,8 @@ class PlayerControls:
     """
     def get_joystick_udlf(self):
         # get the config (0-)
+        if not self.joysticks_present:
+            return [False,False,False,False]
         config = list(self.joystick_controls.values())[0:4]
         return [ self.get_joystick_axis_pressed(c[0], c[1]) for c in config ]  
 
@@ -228,8 +242,10 @@ class PlayerControls:
     """
     def get_input(self, game):
         # TODL: ned to check hoystick or keyboard andmerge dics here
-        return self.get_pressed_joystick_keys() or \
-               self.get_pressed_keyboard_keys(game)
+        if not self.joysticks_present: 
+           return self.get_pressed_keyboard_keys(game)
+
+        return self.get_pressed_joystick_keys()
 
     """
     is_code_pressed

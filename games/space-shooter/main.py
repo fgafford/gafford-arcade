@@ -79,8 +79,8 @@ def main_menu():
     screen.blit(title, (0, 0))
 
     while True:
-        player_input = Player1.get_input(pygame)
         events = pygame.event.get()
+        player_input = Player1.get_input(pygame)
         if player_input["1Player"]:
             NUM_PLAYERS = 1
             break
