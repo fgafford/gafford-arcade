@@ -14,7 +14,6 @@ sound_folder = path.join(path.dirname(__file__), 'sounds')
 
 ###############################
 ## to be placed in "constant.py" later
-# WIDTH = 480
 WIDTH = 1280
 HEIGHT = 720
 FPS = 60
@@ -472,8 +471,9 @@ class Missile(pygame.sprite.Sprite):
 ###################################################
 ## Load all game images
 
-background = pygame.image.load(path.join(img_dir, 'starfield.png')).convert()
-background_rect = background.get_rect()
+background_raw = pygame.image.load(path.join(img_dir, 'starfield.png')).convert()
+background_img = pygame.transform.scale( background_raw, (WIDTH, HEIGHT))
+#title = pygame.transform.scale(title, (WIDTH, HEIGHT), screen)
 ## ^^ draw this rect first
 
 missile_img = pygame.image.load( path.join(img_dir, 'missile.png')).convert_alpha()
@@ -662,6 +662,7 @@ while running:
     screen.fill(BLACK)
     ## draw the stargaze.png image
     # screen.blit(background, background_rect)
+    screen.blit(background_img, (0,0))
 
     all_sprites.draw(screen)
 
