@@ -15,8 +15,8 @@ sound_folder = path.join(path.dirname(__file__), 'sounds')
 ###############################
 ## to be placed in "constant.py" later
 # WIDTH = 480
-WIDTH = 1000
-HEIGHT = 600
+WIDTH = 1280
+HEIGHT = 720
 FPS = 60
 POWERUP_TIME = 5000
 BAR_LENGTH = 100
@@ -73,7 +73,7 @@ def main_menu():
     menu_song = pygame.mixer.music.load(path.join(sound_folder, "menu.ogg"))
     pygame.mixer.music.play(-1)
 
-    title = pygame.image.load(path.join(img_dir, "main.png")).convert()
+    title = pygame.image.load(path.join(img_dir, "tmp-loading.png")).convert()
     title = pygame.transform.scale(title, (WIDTH, HEIGHT), screen)
 
     screen.blit(title, (0, 0))
@@ -88,8 +88,6 @@ def main_menu():
             NUM_PLAYERS = 2
             break
         else:
-            draw_text(screen, "Press [ENTER] To Begin", 30, WIDTH/2, HEIGHT/2)
-            draw_text(screen, "or [Q] To Quit", 30, WIDTH/2, (HEIGHT/2)+40)
             pygame.display.update()
 
 
