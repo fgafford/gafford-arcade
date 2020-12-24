@@ -40,11 +40,11 @@ Things that need to be added:
 
 Bugs: 
 - player is able to shoot after explosion before new ship appears
+- game used to just loop over.... it no longer does...
 
 
 ==== Bugs ====
 - fix game end as soon as a player dies
-- ship can still fire after blowing up
 
 
 

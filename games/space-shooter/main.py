@@ -358,6 +358,9 @@ class Player(pygame.sprite.Sprite):
     def shoot(self):
         ## to tell the laser where to spawn
         now = pygame.time.get_ticks()
+        # Hidden ships cannot shoot
+        if self.hidden:
+            return 
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
             if self.power == 1:
