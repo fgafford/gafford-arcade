@@ -36,7 +36,7 @@ Things that need to be added:
     - maybe make then green, blue, or light blue
 
 - make an extra life bonus at so many points
-- summary screen
++ summary screen
 
 Bugs: 
 - player is able to shoot after explosion before new ship appears
@@ -44,7 +44,6 @@ Bugs:
 
 ==== Bugs ====
 - fix game end as soon as a player dies
-    - make a end game screen
 - ship can still fire after blowing up
 
 
