@@ -133,7 +133,7 @@ class PlayerControls:
                 self.is_keyboard_pressed(game, button)
 
     def has_input(self, game):
-        return self.has_joystick_input(game) or self.has_keyboard_input(game)
+        return (hasattr(self, 'joystick') and self.has_joystick_input(game)) or self.has_keyboard_input(game)
 
     def has_joystick_input(self, game):
         buttons = [ i  for i in range(self.joystick.get_numbuttons()) if self.joystick.get_button(i) == True ]

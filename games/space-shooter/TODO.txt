@@ -1,5 +1,4 @@
 Things that need to be added:
-
 + place a timer on in the middle of the top screen
 
 - time based difficutly
@@ -13,7 +12,7 @@ Things that need to be added:
     + 3: rapid fire (fast)
     - make a powerup obtained sound
     - Missiles
-        - make a missle sprint with fire
+        - make a missle sprite with fire
         - always destroy and entire meteor when missile strikes
         - get a different missle sound
         - make a cooler missile explosion sound
@@ -42,6 +41,11 @@ Things that need to be added:
 Bugs: 
 - player is able to shoot after explosion before new ship appears
 
+
+==== Bugs ====
+- fix game end as soon as a player dies
+    - make a end game screen
+- ship can still fire after blowing up
 
 
 

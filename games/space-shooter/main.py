@@ -42,10 +42,14 @@ difficulty_max = 3
 
 
 ####### Game Varialbes ########
-# the max angle for metiors
+NUM_OF_LIVES = 3
+NUM_OF_MISSILES = 3 
+
 NUM_PLAYERS = 1
 Player1 = PlayerControls(1) 
 Player2 = PlayerControls(2) 
+players = []
+
 meteor_angle = 6
 game_start_time = None
 DEFAULT_SHOOT_RATE = 500
@@ -88,6 +92,59 @@ def main_menu():
             break
         else:
             pygame.display.update()
+
+def game_summary():
+    global menu_display
+    global screen
+    global background_img
+
+    global NUM_PLAYERS
+    global players
+    p1 = players[0]
+
+    screen.blit(background_img, (0,0))
+    draw_text(screen, "GAME OVER", 72, WIDTH/2, HEIGHT/4)
+
+    if NUM_PLAYERS == 1:
+        # Display Score 
+        p1_x = WIDTH/2 
+        p1_y = HEIGHT/2
+        screen.blit(p1.image, (p1_x-25, p1_y))
+        draw_text(screen, "Score:", 30, p1_x, p1_y+50)
+        draw_text(screen, str(p1.score), 30, p1_x, p1_y+100)
+
+    else:
+        # P1 Score 
+        p1_x = WIDTH/3 
+        p1_y = HEIGHT/2
+        screen.blit(p1.image, (p1_x-25, p1_y))
+        draw_text(screen, "Blue Score:", 30, p1_x, p1_y+50)
+        draw_text(screen, str(p1.score), 30, p1_x, p1_y+100)
+
+        p2 = players[1]
+        # P2 Score 
+        p2_x = (WIDTH/3)*2
+        p2_y = HEIGHT/2
+        screen.blit(p2.image, (p2_x-25, p2_y))
+        draw_text(screen, "Red Score:",  30, p2_x, p2_y+50)
+        draw_text(screen, str(p2.score), 30, p2_x, p2_y+100)
+        # Display winner banner
+
+    pygame.display.update()
+
+    # Stall a few seconds to make sure plyers see the game has ended
+    time.sleep(1)
+
+    # Loop here till button is pushed 
+    while True:
+        events = pygame.event.get()
+        if Player1.has_input(pygame) or Player2.has_input(pygame):
+            break
+        else:
+            a = 1 + 1
+    
+    # let linux keep the loop for now
+    exit()
 
 
 def draw_text(surf, text, size, x, y, align = 'midtop'):
@@ -144,9 +201,8 @@ def check_player_hit(player):
 
     ## if player died and the explosion has finished, end game
     if player.lives == 0:
-        global menu_display
-        # TODL: shoe end game summary....
-        menu_display = True
+        game_summary()
+
 
 def draw_shield_bar(surf, x, y, pct):
     # if pct < 0:
@@ -216,7 +272,7 @@ class Player(pygame.sprite.Sprite):
 
         self.player_controls = player_controls
         self.score = 0
-        self.missiles = 3
+        self.missiles = NUM_OF_MISSILES
         player_img = pygame.image.load(path.join(img_dir, f'player_{color}.png')).convert()
         self.laser_img = pygame.image.load(path.join(img_dir, f'player_{color}_laser.png')).convert()
         self.mini_img = pygame.image.load(path.join(img_dir, f'player_{color}_extra_life.png')).convert()
@@ -233,11 +289,16 @@ class Player(pygame.sprite.Sprite):
         self.shield = 100
         self.shoot_delay = DEFAULT_SHOOT_RATE
         self.last_shot = pygame.time.get_ticks()
-        self.lives = 3
+        self.lives = NUM_OF_LIVES
         self.hidden = False
         self.hide_timer = pygame.time.get_ticks()
         self.power = 1
         self.power_timer = pygame.time.get_ticks()
+
+    def reset(self):
+        self.lives = NUM_OF_LIVES
+        self.missiles = NUM_OF_MISSILES
+        self.score = 0
 
     def update(self):
         ## time out for powerups
@@ -473,8 +534,6 @@ class Missile(pygame.sprite.Sprite):
 
 background_raw = pygame.image.load(path.join(img_dir, 'starfield.png')).convert()
 background_img = pygame.transform.scale( background_raw, (WIDTH, HEIGHT))
-#title = pygame.transform.scale(title, (WIDTH, HEIGHT), screen)
-## ^^ draw this rect first
 
 missile_img = pygame.image.load( path.join(img_dir, 'missile.png')).convert_alpha()
 missile_powerup_raw = pygame.image.load( path.join(img_dir, 'missile_powerup.png')).convert_alpha()
@@ -587,8 +646,6 @@ while running:
 
         ## group all the sprites together for ease of update
         all_sprites = pygame.sprite.Group()
-
-        players = [] 
 
         player1 = Player(Player1, 'blue')
         all_sprites.add(player1)
