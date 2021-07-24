@@ -14,8 +14,8 @@ sound_folder = path.join(path.dirname(__file__), 'sounds')
 
 ###############################
 ## to be placed in "constant.py" later
-WIDTH = 1276
-HEIGHT = 716
+WIDTH = 1184
+HEIGHT = 624
 FPS = 60
 POWERUP_TIME = 5000
 BAR_LENGTH = 100
