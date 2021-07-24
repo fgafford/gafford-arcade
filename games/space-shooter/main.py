@@ -14,8 +14,8 @@ sound_folder = path.join(path.dirname(__file__), 'sounds')
 
 ###############################
 ## to be placed in "constant.py" later
-WIDTH = 1280
-HEIGHT = 720
+WIDTH = 1276
+HEIGHT = 716
 FPS = 60
 POWERUP_TIME = 5000
 BAR_LENGTH = 100
@@ -84,10 +84,11 @@ def main_menu():
     while True:
         events = pygame.event.get()
         player_input = Player1.get_input(pygame)
-        if player_input["1Player"]:
+        player2_input = Player1.get_input(pygame)
+        if player_input["1Player"] or player2_input["1Player"]:
             NUM_PLAYERS = 1
             break
-        if player_input["2Player"]:
+        if player_input["2Player"] or player2_input["2Player"]:
             NUM_PLAYERS = 2
             break
         else:
@@ -133,7 +134,7 @@ def game_summary():
     pygame.display.update()
 
     # Stall a few seconds to make sure plyers see the game has ended
-    time.sleep(1)
+    time.sleep(5)
 
     # Loop here till button is pushed 
     while True:
@@ -719,7 +720,7 @@ while running:
     screen.fill(BLACK)
     ## draw the stargaze.png image
     # screen.blit(background, background_rect)
-    screen.blit(background_img, (0,0))
+    #screen.blit(background_img, (0,0))
 
     all_sprites.draw(screen)
 

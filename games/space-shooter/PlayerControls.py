@@ -100,14 +100,14 @@ class PlayerControls:
             self.keyboard_controls = P1_Controls["keyboard"]
             self.joystick_controls = P1_Controls["joystick"]
             if self.joysticks_present:
-                self.joystick = pygame.joystick.Joystick(1)
+                self.joystick = pygame.joystick.Joystick(0)
 
         elif player == 2: 
             # Player 1 actually has the 2nd joystick for input
             self.keyboard_controls = P2_Controls["keyboard"]
             self.joystick_controls = P2_Controls["joystick"]
             if self.joysticks_present:
-                self.joystick = pygame.joystick.Joystick(0)
+                self.joystick = pygame.joystick.Joystick(1)
         else: 
             raise Exception(f'Invalid player number {player} must be either: 1 or 2')
 
