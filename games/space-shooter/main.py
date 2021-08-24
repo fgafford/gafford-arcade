@@ -76,7 +76,7 @@ def main_menu():
     menu_song = pygame.mixer.music.load(path.join(sound_folder, "menu.ogg"))
     pygame.mixer.music.play(-1)
 
-    title = pygame.image.load(path.join(img_dir, "tmp-loading.png")).convert()
+    title = pygame.image.load(path.join(img_dir, "space_rocks_splash.png")).convert()
     title = pygame.transform.scale(title, (WIDTH, HEIGHT), screen)
 
     screen.blit(title, (0, 0))
