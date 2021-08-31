@@ -1,0 +1,25 @@
+=== To plan ===
+- How do we decided on meteor frequency?
+
+- How do we decided on powerup frequency?
+    - think this is good as a percent
+        - the more things you shoot the more chance you have to get power-ups
+            > may want to make the shield power-up stronger
+
+- How do we do scoring?
+    - really comes down to getting gems
+
+    - things that make it fun  
+        - powerups 
+        - having to move fast
+
+== Scoring ==
+Meteor: 25
+Black detroyed: 200 
+Gem: 1k
+Extra Life: 8k / 10k
+
+
+
+
+

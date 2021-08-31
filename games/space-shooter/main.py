@@ -39,7 +39,35 @@ difficulty_increment = .1
 difficulty_interval = 5
 # maximum difficulty 
 difficulty_max = 3
+# Number of meteors on screen
+meteor_count = 20
 
+FREQUENCY = {
+        "powerup":      0.1,
+        "hard_meteor":  0.005 
+    }
+
+
+####### Scoring #######
+"""
+Meteor: 25
+Black detroyed: 200 
+Gem: 1k
+Extra Life: 8k / 10k
+"""
+POINTS = {
+        "regular": {
+            0: 25,
+            1: 25,
+            2: 25,
+            3: 25,
+        },
+        "hard": {
+            0: 200,
+            1: 200,
+        },
+        "gem": 1000
+    }
 
 ####### Game Varialbes ########
 NUM_OF_LIVES = 3
@@ -54,6 +82,7 @@ meteor_angle = 6
 game_start_time = None
 DEFAULT_SHOOT_RATE = 500
 FAST_SHOOT_RATE = 250
+
 
 ###############################
 ## to placed in "__init__.py" later
@@ -236,9 +265,8 @@ def draw_missiles(screen, x, y, count):
         screen.blit(ui_numbers[num], (x+ x_offset , y+5))
 
 
-def newmob(x=-1, y=-1, size=-1):
-    # print(f'Mob: ({x},{y})')
-    mob_element = Mob(x, y, size)
+def newmob(x=-1, y=-1, size=-1, hard=False):
+    mob_element = Mob(x, y, size, hard)
     all_sprites.add(mob_element)
     mobs.add(mob_element)
 
@@ -304,7 +332,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         ## time out for powerups
-        if self.power >= 2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
+        if self.power > 2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
             self.power -= 1
             self.shoot_delay = DEFAULT_SHOOT_RATE
             self.power_time = pygame.time.get_ticks()
@@ -424,11 +452,21 @@ class Player(pygame.sprite.Sprite):
 
 # defines the enemies
 class Mob(pygame.sprite.Sprite):
-    def __init__(self, x=-1, y=-1, size=-1):
-        if size >= 0:
-            self.meteor = random.choice(meteor_by_size[size])
+    def __init__(self, x=-1, y=-1, size=-1, hard=False):
+        if hard is True:
+            met_list = hard_meteor_list 
+            by_size = hard_meteor_by_size
         else: 
-            self.meteor = random.choice(meteor_list)
+            met_list = meteor_list 
+            by_size = meteor_by_size
+
+        if size >= 0:
+            self.meteor = random.choice(by_size[size])
+        else: 
+            self.meteor = random.choice(met_list)
+
+        self.hard = hard
+
         pygame.sprite.Sprite.__init__(self)
         self.image_orig = self.meteor['img']
         self.image_orig.set_colorkey(BLACK)
@@ -444,10 +482,10 @@ class Mob(pygame.sprite.Sprite):
         else:
             self.rect.y = y
         # for randomizing the speed of the Mob
-        min_meteor_speed = 5
+        min_meteor_speed = 2
         max_meteor_speed = 5
-        self.speedy = 5
-        # self.speedy = random.randrange(min_meteor_speed, max_meteor_speed)
+        # self.speedy = 5
+        self.speedy = random.randrange(min_meteor_speed, max_meteor_speed)
 
         ## randomize the movements a little more
         self.speedx = random.randrange((meteor_angle * -1), meteor_angle)
@@ -569,25 +607,24 @@ ui_numbers = {
 
 # meteor_img = pygame.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
 # meteor_images = []
-meteor_list = [
-    { 'imgName': 'meteorBrown_tiny1.png' , 'size': 0, 'hard': False },
-    { 'imgName': 'meteorBrown_small2.png', 'size': 1, 'hard': False },
-    { 'imgName': 'meteorBrown_small1.png', 'size': 1, 'hard': False },
-    { 'imgName': 'meteorBrown_med3.png'  , 'size': 2, 'hard': False },
-    { 'imgName': 'meteorBrown_med1.png'  , 'size': 2, 'hard': False },
-    { 'imgName': 'meteorBrown_big2.png'  , 'size': 3, 'hard': False},
-    { 'imgName': 'meteorBrown_big1.png'  , 'size': 3, 'hard': False},
-]
+def add_image(meteor):
+    meteor['img'] = pygame.image.load( path.join(img_dir + '/', meteor['imgName'])).convert()
 
-# TODO: add some small hard meteors
-hard_meteor_list = [
-    { 'imgName': 'Black_large.png'       , 'size': 3, 'hard': False},
-    # { 'imgName': 'Black_small.png'       , 'size': 1, 'hard': False},
-]
-
-meteor_count = 20
 def is_size(size):
     return lambda m: m['size'] == size
+
+meteor_list = [
+    { 'imgName': 'meteorBrown_tiny1.png' , 'size': 0, 'hard': False, 'gem': False },
+    { 'imgName': 'meteorBrown_small2.png', 'size': 1, 'hard': False, 'gem': False },
+    { 'imgName': 'meteorBrown_small1.png', 'size': 1, 'hard': False, 'gem': False },
+    { 'imgName': 'meteorBrown_med3.png'  , 'size': 2, 'hard': False, 'gem': False },
+    { 'imgName': 'meteorBrown_med1.png'  , 'size': 2, 'hard': False, 'gem': False },
+    { 'imgName': 'meteorBrown_big2.png'  , 'size': 3, 'hard': False, 'gem': False },
+    { 'imgName': 'meteorBrown_big1.png'  , 'size': 3, 'hard': False, 'gem': False },
+]
+
+for meteor in meteor_list:
+    add_image(meteor)
 
 meteor_by_size = {
     3: [ m for m in filter(is_size(3), meteor_list) ],
@@ -596,8 +633,25 @@ meteor_by_size = {
     0: [ m for m in filter(is_size(0), meteor_list) ],
 }
 
-for meteor in meteor_list:
-    meteor['img'] = pygame.image.load( path.join(img_dir + '/', meteor['imgName'])).convert()
+hard_meteor_list = [
+    { 'imgName': 'Black_small.png'       , 'size': 0, 'hard': True, 'gem': False },
+    { 'imgName': 'Black_large_empty.png' , 'size': 1, 'hard': True, 'gem': False },
+    { 'imgName': 'Black_large.png'       , 'size': 1, 'hard': True, 'gem': True },
+]
+
+hard_meteor_by_size = {
+    # 3: [ m for m in filter(is_size(3), meteor_list) ],
+    # 2: [ m for m in filter(is_size(2), meteor_list) ],
+    1: [ m for m in filter(is_size(1), hard_meteor_list) ],
+    0: [ m for m in filter(is_size(0), hard_meteor_list) ],
+}
+
+
+
+
+
+for meteor in hard_meteor_list:
+    add_image(meteor)
 
 ## meteor explosion
 explosion_anim = {}
@@ -711,6 +765,12 @@ while running:
         #     if event.key == pygame.K_SPACE:
         #         player1.shoot()      ## we have to define the shoot()  function
 
+    #1.5 Do we get a hard rock?
+
+    if random.random() < FREQUENCY['hard_meteor']:
+        # add a new one to the screen
+        newmob(hard=True)
+
     #2 Update
     all_sprites.update()
 
@@ -722,21 +782,25 @@ while running:
     for hit in hits:
         mob = hit
         laser = hits[hit][0]
-        laser.player.add_to_score(50 - mob.radius)
-        # player1.score += 50 - hit.radius  # give different scores for hitting big and small metoers
+
+        points = POINTS['hard' if mob.hard else "regular"][mob.meteor['size']]
+        laser.player.add_to_score(points)
+
         random.choice(expl_sounds).play()
         # m = Mob()
         # all_sprites.add(m)
         # mobs.add(m)
         expl = Explosion(hit.rect.center, 'lg')
         all_sprites.add(expl)
-        if random.random() > 0.9:
+        if random.random() < FREQUENCY['powerup']:
             pow = Pow(hit.rect.center)
             all_sprites.add(pow)
             powerups.add(pow)
+
         # spawn a new mob
         new_mob_size = mob.meteor['size'] - 1 
         if new_mob_size >= 0:
+            # Divide it!
             newmob(hit.rect.x, hit.rect.y, new_mob_size) 
             newmob(hit.rect.x, hit.rect.y, new_mob_size) 
 
