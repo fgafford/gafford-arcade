@@ -236,8 +236,9 @@ def draw_missiles(screen, x, y, count):
         screen.blit(ui_numbers[num], (x+ x_offset , y+5))
 
 
-def newmob():
-    mob_element = Mob()
+def newmob(x=-1, y=-1, size=-1):
+    # print(f'Mob: ({x},{y})')
+    mob_element = Mob(x, y, size)
     all_sprites.add(mob_element)
     mobs.add(mob_element)
 
@@ -423,15 +424,25 @@ class Player(pygame.sprite.Sprite):
 
 # defines the enemies
 class Mob(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, x=-1, y=-1, size=-1):
+        if size >= 0:
+            self.meteor = random.choice(meteor_by_size[size])
+        else: 
+            self.meteor = random.choice(meteor_list)
         pygame.sprite.Sprite.__init__(self)
-        self.image_orig = random.choice(meteor_images)
+        self.image_orig = self.meteor['img']
         self.image_orig.set_colorkey(BLACK)
         self.image = self.image_orig.copy()
         self.rect = self.image.get_rect()
         self.radius = int(self.rect.width * .98 / 2)
-        self.rect.x = random.randrange(0, WIDTH - self.rect.width)
-        self.rect.y = random.randrange(-150, -100)
+        if x == -1:
+            self.rect.x = random.randrange(0, WIDTH - self.rect.width)
+        else:
+            self.rect.x = x
+        if y == -1:
+            self.rect.y = random.randrange(-150, -100)
+        else:
+            self.rect.y = y
         # for randomizing the speed of the Mob
         min_meteor_speed = 5
         max_meteor_speed = 5
@@ -557,21 +568,36 @@ ui_numbers = {
         }
 
 # meteor_img = pygame.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
-meteor_images = []
+# meteor_images = []
 meteor_list = [
-    'meteorBrown_big1.png',
-    'meteorBrown_big2.png',
-    'meteorBrown_med1.png',
-    'meteorBrown_med3.png',
-    'meteorBrown_small1.png',
-    'meteorBrown_small2.png',
-    'meteorBrown_tiny1.png'
+    { 'imgName': 'meteorBrown_tiny1.png' , 'size': 0, 'hard': False },
+    { 'imgName': 'meteorBrown_small2.png', 'size': 1, 'hard': False },
+    { 'imgName': 'meteorBrown_small1.png', 'size': 1, 'hard': False },
+    { 'imgName': 'meteorBrown_med3.png'  , 'size': 2, 'hard': False },
+    { 'imgName': 'meteorBrown_med1.png'  , 'size': 2, 'hard': False },
+    { 'imgName': 'meteorBrown_big2.png'  , 'size': 3, 'hard': False},
+    { 'imgName': 'meteorBrown_big1.png'  , 'size': 3, 'hard': False},
 ]
-meteor_count = 20
 
-for image in meteor_list:
-    meteor_images.append(pygame.image.load(
-        path.join(img_dir, image)).convert())
+# TODO: add some small hard meteors
+hard_meteor_list = [
+    { 'imgName': 'Black_large.png'       , 'size': 3, 'hard': False},
+    # { 'imgName': 'Black_small.png'       , 'size': 1, 'hard': False},
+]
+
+meteor_count = 20
+def is_size(size):
+    return lambda m: m['size'] == size
+
+meteor_by_size = {
+    3: [ m for m in filter(is_size(3), meteor_list) ],
+    2: [ m for m in filter(is_size(2), meteor_list) ],
+    1: [ m for m in filter(is_size(1), meteor_list) ],
+    0: [ m for m in filter(is_size(0), meteor_list) ],
+}
+
+for meteor in meteor_list:
+    meteor['img'] = pygame.image.load( path.join(img_dir + '/', meteor['imgName'])).convert()
 
 ## meteor explosion
 explosion_anim = {}
@@ -600,11 +626,8 @@ powerup_images['shield'] = pygame.image.load( path.join(img_dir, 'shield_gold.pn
 powerup_images['gun'] = pygame.image.load( path.join(img_dir, 'bolt_gold.png')).convert()
 powerup_images['missile'] = missile_powerup.convert()
 
-
 ###################################################
 
-
-###################################################
 ### Load all game sounds
 shooting_sound = pygame.mixer.Sound(path.join(sound_folder, 'pew.wav'))
 missile_sound = pygame.mixer.Sound(path.join(sound_folder, 'rocket.ogg'))
@@ -711,7 +734,11 @@ while running:
             pow = Pow(hit.rect.center)
             all_sprites.add(pow)
             powerups.add(pow)
-        newmob()  # spawn a new mob
+        # spawn a new mob
+        new_mob_size = mob.meteor['size'] - 1 
+        if new_mob_size >= 0:
+            newmob(hit.rect.x, hit.rect.y, new_mob_size) 
+            newmob(hit.rect.x, hit.rect.y, new_mob_size) 
 
     ## ^^ the above loop will create the amount of mob objects which were killed spawn again
     #########################
