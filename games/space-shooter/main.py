@@ -15,6 +15,7 @@ sound_folder = path.join(path.dirname(__file__), 'sounds')
 ###############################
 ## to be placed in "constant.py" later
 WIDTH = 1184
+MID_X = WIDTH / 2
 HEIGHT = 624
 FPS = 60
 POWERUP_TIME = 5000
@@ -139,7 +140,7 @@ def game_summary():
     p1 = players[0]
 
     screen.blit(background_img, (0,0))
-    draw_text(screen, "GAME OVER", 72, WIDTH/2, HEIGHT/4)
+    draw_text(screen, "GAME OVER", 72, MID_X, HEIGHT/4)
 
     if NUM_PLAYERS == 1:
         # Display Score 
@@ -331,7 +332,7 @@ class Player(pygame.sprite.Sprite):
         self.shield = 100
         self.missiles = NUM_OF_MISSILES
         self.hide_timer = pygame.time.get_ticks()
-        self.rect.center = (WIDTH / 2, HEIGHT + 200)
+        self.rect.center = (MID_X, HEIGHT + 200)
 
     def update(self):
         ## time out for powerups
@@ -374,7 +375,7 @@ class Player(pygame.sprite.Sprite):
     def set_start_position(self):
         global NUM_PLAYER
         if NUM_PLAYERS == 1:
-            self.rect.centerx = WIDTH / 2
+            self.rect.centerx = MID_X
             self.rect.bottom = HEIGHT - 30
         if NUM_PLAYERS == 2:
             player_number = self.player_controls.get_player_number()
@@ -509,18 +510,12 @@ class Mob(pygame.sprite.Sprite):
             self.rect.center = old_center
 
     def update(self):
-        self.rotate()
+        # self.rotate()
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         ## now what if the mob element goes out of the screen
         if (self.rect.top > HEIGHT + 10) or (self.rect.left < -25) or (self.rect.right > WIDTH + 20):
             self.kill()
-        """
-            self.rect.x = random.randrange(0, WIDTH - self.rect.width)
-            self.rect.y = random.randrange(-100, -40)
-            # for randomizing the speed of the Mob
-            self.speedy = random.randrange(1, 8)
-        """
 
 ## defines the sprite for Powerups
 
@@ -595,18 +590,18 @@ missile_img = pygame.image.load( path.join(img_dir, 'missile.png')).convert_alph
 missile_powerup_raw = pygame.image.load( path.join(img_dir, 'missile_powerup.png')).convert_alpha()
 missile_powerup = pygame.transform.scale( missile_powerup_raw, (12,30))
 ui_numbers = {
-        "x": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeralX.png')).convert_alpha(),  
-        "0": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral0.png')).convert_alpha(),  
-        "1": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral1.png')).convert_alpha(),  
-        "2": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral2.png')).convert_alpha(),  
-        "3": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral3.png')).convert_alpha(),  
-        "4": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral4.png')).convert_alpha(),  
-        "5": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral5.png')).convert_alpha(),  
-        "6": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral6.png')).convert_alpha(),  
-        "7": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral7.png')).convert_alpha(),  
-        "8": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral8.png')).convert_alpha(),  
-        "9": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral9.png')).convert_alpha(),  
-        }
+    "x": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeralX.png')).convert_alpha(),  
+    "0": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral0.png')).convert_alpha(),  
+    "1": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral1.png')).convert_alpha(),  
+    "2": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral2.png')).convert_alpha(),  
+    "3": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral3.png')).convert_alpha(),  
+    "4": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral4.png')).convert_alpha(),  
+    "5": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral5.png')).convert_alpha(),  
+    "6": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral6.png')).convert_alpha(),  
+    "7": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral7.png')).convert_alpha(),  
+    "8": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral8.png')).convert_alpha(),  
+    "9": pygame.image.load( path.join(f'{img_dir}/numbers', 'numeral9.png')).convert_alpha(),  
+}
 
 # meteor_img = pygame.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
 # meteor_images = []
@@ -832,7 +827,7 @@ while running:
         draw_player_stats(player2, WIDTH - 100, 0, 'topleft')
 
     # draw game timer
-    draw_text(screen, get_game_start_time(), 18, WIDTH / 2, 10)
+    draw_text(screen, get_game_start_time(), 18, MID_X, 10)
 
     ## Done after drawing everything to the screen
     pygame.display.flip()
