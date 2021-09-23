@@ -49,7 +49,8 @@ start_meteor_count = 10
 
 FREQUENCY = {
     "powerup":      0.1,
-    "hard_meteor":  0.1 
+    "hard_meteor":  0.1,
+    "extra_life": 10000
 }
 
 
@@ -299,6 +300,7 @@ class Player(pygame.sprite.Sprite):
 
         self.player_controls = player_controls
         self.score = 0
+        self.next_extra_life = FREQUENCY.get("extra_life") 
         self.missiles = NUM_OF_MISSILES
         player_img = pygame.image.load(path.join(img_dir, f'player_{color}.png')).convert()
         self.laser_img = pygame.image.load(path.join(img_dir, f'player_{color}_laser.png')).convert()
@@ -435,6 +437,10 @@ class Player(pygame.sprite.Sprite):
 
     def add_to_score(self, points):
         self.score += points
+        if self.score > self.next_extra_life:
+            self.lives += 1
+            self.next_extra_life += FREQUENCY.get("extra_life") 
+
 
     def laser_upgrade(self):
         self.power += 1
@@ -774,20 +780,23 @@ while running:
 
     ## check if a laser hit a mob
     ## now we have a group of lasers and a group of mob
-    hits = pygame.sprite.groupcollide(mobs, lasers, True, True)
+    hits = pygame.sprite.groupcollide(mobs, lasers, False, True)
     ## now as we delete the mob element when we hit one with a laser, we need to respawn them again
     ## as there will be no mob_elements left out
     for hit in hits:
         mob = hit
-        laser = hits[hit][0]
+        weapon = hits[hit][0]
+        if mob.hard and not isinstance(weapon, Missile):
+            continue 
 
         points = POINTS['hard' if mob.hard else "regular"][mob.meteor['size']]
-        laser.player.add_to_score(points)
+        weapon.player.add_to_score(points)
 
         random.choice(expl_sounds).play()
         # m = Mob()
         # all_sprites.add(m)
         # mobs.add(m)
+        mob.kill()
         expl = Explosion(hit.rect.center, 'lg')
         all_sprites.add(expl)
         if random.random() < FREQUENCY['powerup']:
