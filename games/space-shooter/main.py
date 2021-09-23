@@ -37,15 +37,20 @@ difficulty_mutiplier = 1
 difficulty_increment = .1
 # the interval (in seconds?) that increase the difficulty
 difficulty_interval = 5
-# maximum difficulty 
-difficulty_max = 3
+# number of ticks before metor appears
+meteor_delay = 100
+# how much the difficulty is
+meteor_multiplier = 1
+# how much meteors speed up 
+speed_multiplier = 1
 # Number of meteors on screen
-meteor_count = 20
+start_meteor_count = 10
+
 
 FREQUENCY = {
-        "powerup":      0.1,
-        "hard_meteor":  0.005 
-    }
+    "powerup":      0.1,
+    "hard_meteor":  0.1 
+}
 
 
 ####### Scoring #######
@@ -170,8 +175,6 @@ def game_summary():
         events = pygame.event.get()
         if Player1.has_input(pygame) or Player2.has_input(pygame):
             break
-        else:
-            a = 1 + 1
     
     # let linux keep the loop for now
     exit()
@@ -201,8 +204,7 @@ def get_game_start_time(percision = 0):
 ## check if the player collides with the mob
 # gives back a list, True makes the mob element disappear
 def check_player_hit(player):
-    hits = pygame.sprite.spritecollide(
-        player, mobs, True, pygame.sprite.collide_circle)
+    hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
     for hit in hits:
         player.shield -= hit.radius * 2
         expl = Explosion(hit.rect.center, 'sm')
@@ -212,18 +214,13 @@ def check_player_hit(player):
             player_die_sound.play()
             death_explosion = Explosion(player.rect.center, 'player')
             all_sprites.add(death_explosion)
-            # running = False     ## GAME OVER 3:D
-            player.hide()
-            player.lives -= 1
-            player.shield = 100
+            player.explode()
 
     ## if the player hit a power up
     hits = pygame.sprite.spritecollide(player, powerups, True)
     for hit in hits:
         if hit.type == 'shield':
-            player.shield += random.randrange(10, 30)
-            if player.shield >= 100:
-                player.shield = 100
+            player.shield = 100
         if hit.type == 'gun':
             player.laser_upgrade()
         if hit.type == 'missile':
@@ -325,10 +322,14 @@ class Player(pygame.sprite.Sprite):
         self.power = 1
         self.power_timer = pygame.time.get_ticks()
 
-    def reset(self):
-        self.lives = NUM_OF_LIVES
+    def explode(self):
+        self.hidden = True
+        self.lives -= 1
+        self.power = 1
+        self.shield = 100
         self.missiles = NUM_OF_MISSILES
-        self.score = 0
+        self.hide_timer = pygame.time.get_ticks()
+        self.rect.center = (WIDTH / 2, HEIGHT + 200)
 
     def update(self):
         ## time out for powerups
@@ -442,12 +443,6 @@ class Player(pygame.sprite.Sprite):
     def add_missile(self):
         self.missiles += 1
 
-    def hide(self):
-        # TODO: make is so that we cannot shoot in this state
-        self.hidden = True
-        self.missiles = 3
-        self.hide_timer = pygame.time.get_ticks()
-        self.rect.center = (WIDTH / 2, HEIGHT + 200)
 
 
 # defines the enemies
@@ -512,12 +507,14 @@ class Mob(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         ## now what if the mob element goes out of the screen
-
         if (self.rect.top > HEIGHT + 10) or (self.rect.left < -25) or (self.rect.right > WIDTH + 20):
+            self.kill()
+        """
             self.rect.x = random.randrange(0, WIDTH - self.rect.width)
             self.rect.y = random.randrange(-100, -40)
             # for randomizing the speed of the Mob
             self.speedy = random.randrange(1, 8)
+        """
 
 ## defines the sprite for Powerups
 
@@ -722,6 +719,7 @@ while running:
         menu_display = False
 
         game_start_time = time.time()
+        next_meteor_tick = pygame.time.get_ticks() + meteor_delay
         ########################
 
 
@@ -739,14 +737,14 @@ while running:
 
         ## spawn a group of mob
         mobs = pygame.sprite.Group()
-        for i in range(meteor_count): 
+        for i in range(start_meteor_count): 
             newmob()
 
         ## group for lasers
         lasers = pygame.sprite.Group()
         powerups = pygame.sprite.Group()
 
-    #1 Process input/events
+    # 1 Process input/events
     clock.tick(FPS)  # will make the loop run at the same speed all the time
 
     # gets all the events which have occured till now and keeps tab of them.
@@ -765,13 +763,13 @@ while running:
         #     if event.key == pygame.K_SPACE:
         #         player1.shoot()      ## we have to define the shoot()  function
 
-    #1.5 Do we get a hard rock?
+    # 2 Add new meteors
+    if pygame.time.get_ticks() > next_meteor_tick :
+        hard = True if random.random() < FREQUENCY['hard_meteor'] else False
+        newmob(hard=hard)
+        next_meteor_tick = pygame.time.get_ticks() + meteor_delay
 
-    if random.random() < FREQUENCY['hard_meteor']:
-        # add a new one to the screen
-        newmob(hard=True)
-
-    #2 Update
+    # 3 Update
     all_sprites.update()
 
     ## check if a laser hit a mob
@@ -810,7 +808,7 @@ while running:
     for player in players: 
         check_player_hit(player)
 
-    #3 Draw/render
+    # 4 Draw/render
     screen.fill(BLACK)
     ## draw the stargaze.png image
     # screen.blit(background, background_rect)
