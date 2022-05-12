@@ -228,9 +228,9 @@ def check_player_hit(player):
         if hit.type == 'missile':
             player.add_missile()
 
-    ## if player died and the explosion has finished, end game
-    if player.lives == 0:
-        game_summary()
+    if player.lives <= 0: 
+        player.alive = False
+
 
 
 def draw_shield_bar(surf, x, y, pct):
@@ -299,6 +299,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, player_controls, color):
         pygame.sprite.Sprite.__init__(self)
 
+        self.alive = True
         self.player_controls = player_controls
         self.score = 0
         self.next_extra_life = FREQUENCY.get("extra_life") 
@@ -342,7 +343,7 @@ class Player(pygame.sprite.Sprite):
             self.power_time = pygame.time.get_ticks()
 
         ## unhide
-        if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
+        if self.alive and self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
             self.set_start_position()
 
@@ -811,6 +812,16 @@ while running:
 
     for player in players: 
         check_player_hit(player)
+
+    # Check for game end
+    ## if player died and the explosion has finished, end game
+    if NUM_PLAYERS == 1 and not player1.alive:
+        game_summary()
+    if NUM_PLAYERS == 2 and not player1.alive and not player2.alive:
+        game_summary()
+    """
+    if player.lives <= 0:
+    """
 
     # 4 Draw/render
     screen.fill(BLACK)
