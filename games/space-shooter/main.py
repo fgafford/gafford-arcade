@@ -227,6 +227,9 @@ def check_player_hit(player):
             player.laser_upgrade()
         if hit.type == 'missile':
             player.add_missile()
+        if hit.type == 'gem':
+            player.add_to_score(POINTS.get("gem"))
+            player.shield = 100
 
     if player.lives <= 0: 
         player.alive = False
@@ -469,6 +472,7 @@ class Mob(pygame.sprite.Sprite):
             self.meteor = random.choice(met_list)
 
         self.hard = hard
+        self.has_gem = self.meteor.get("gem")
 
         pygame.sprite.Sprite.__init__(self)
         self.image_orig = self.meteor['img']
@@ -522,15 +526,26 @@ class Mob(pygame.sprite.Sprite):
 
 
 class Pow(pygame.sprite.Sprite):
-    def __init__(self, center):
+    def __init__(self, center, gem=None):
         pygame.sprite.Sprite.__init__(self)
-        self.type = random.choice(['shield', 'gun', 'missile'])
-        self.image = powerup_images[self.type]
-        self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect()
-        ## place the laser according to the current position of the player
+        if gem: 
+            # TODO: use dict keys instead 
+            self.type = "gem"
+            img_id = random.choice(['s0', 'd0', 'j0'])
+            self.image = gem_images[img_id]
+            self.image.set_colorkey(BLACK)
+            self.rect = self.image.get_rect()
+            self.speedy = 3
+        else: 
+            # TODO: use dict keys instead 
+            self.type = random.choice(['shield', 'gun', 'missile'])
+            self.image = powerup_images[self.type]
+            self.image.set_colorkey(BLACK)
+            self.rect = self.image.get_rect()
+            self.speedy = 2
+
+        ## place the powerup according to the current position of the player
         self.rect.center = center
-        self.speedy = 2
 
     def update(self):
         """should spawn right in front of the player"""
@@ -674,10 +689,16 @@ for i in range(9):
     explosion_anim['player'].append(img)
 
 ## load power ups
-powerup_images = {}
-powerup_images['shield'] = pygame.image.load( path.join(img_dir, 'shield_gold.png')).convert()
-powerup_images['gun'] = pygame.image.load( path.join(img_dir, 'bolt_gold.png')).convert()
-powerup_images['missile'] = missile_powerup.convert()
+powerup_images = {
+    'shield': pygame.image.load( path.join(img_dir, 'shield_gold.png')).convert(),
+    'gun': pygame.image.load( path.join(img_dir, 'bolt_gold.png')).convert(),
+    'missile': missile_powerup.convert()
+}
+gem_images = {
+    's0': pygame.image.load( path.join(img_dir, 'Crystal_Blue_1.png')).convert(),
+    'd0': pygame.image.load( path.join(img_dir, 'green_crystal.png')).convert(),
+    'j0': pygame.image.load( path.join(img_dir, 'Crystal_Purple_1.png')).convert(),
+}
 
 ###################################################
 
@@ -785,6 +806,12 @@ while running:
         if mob.hard and not isinstance(weapon, Missile):
             continue 
 
+        if mob.has_gem: 
+            # add a gem to the screen
+            gem = Pow(hit.rect.center, True)
+            all_sprites.add(gem)
+            powerups.add(gem)
+
         points = POINTS['hard' if mob.hard else "regular"][mob.meteor['size']]
         weapon.player.add_to_score(points)
 
@@ -819,9 +846,6 @@ while running:
         game_summary()
     if NUM_PLAYERS == 2 and not player1.alive and not player2.alive:
         game_summary()
-    """
-    if player.lives <= 0:
-    """
 
     # 4 Draw/render
     screen.fill(BLACK)
