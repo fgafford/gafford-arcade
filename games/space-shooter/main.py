@@ -627,6 +627,11 @@ def add_image(meteor):
 def is_size(size):
     return lambda m: m['size'] == size
 
+def img_at_size(path, h, w): 
+    size = (h, w)
+    img = pygame.image.load(path).convert()
+    return pygame.transform.scale(img, size)
+
 meteor_list = [
     { 'imgName': 'meteorBrown_tiny1.png' , 'size': 0, 'hard': False, 'gem': False },
     { 'imgName': 'meteorBrown_small2.png', 'size': 1, 'hard': False, 'gem': False },
@@ -695,10 +700,12 @@ powerup_images = {
     'missile': missile_powerup.convert()
 }
 gem_images = {
-    's0': pygame.image.load( path.join(img_dir, 'Crystal_Blue_1.png')).convert(),
-    'd0': pygame.image.load( path.join(img_dir, 'green_crystal.png')).convert(),
-    'j0': pygame.image.load( path.join(img_dir, 'Crystal_Purple_1.png')).convert(),
+    's0': img_at_size(path.join(img_dir, 'Crystal_Blue_1.png'), 20, 50),
+    'd0': img_at_size(path.join(img_dir, 'green_crystal.png'), 35, 35),
+    'j0': img_at_size(path.join(img_dir, 'Crystal_Purple_1.png'), 35, 35)
 }
+
+
 
 ###################################################
 
